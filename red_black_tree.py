@@ -13,6 +13,42 @@ class RedBlackTree:
         self.rl = False
 
     def insert_helper(self, new_node):
+        parent = new_node.parent
+        grandparent = parent.parent
+        while parent.color == "R":
+            if parent == grandparent.right:
+                uncle = grandparent.left
+                if uncle.color == "R":
+                    parent.color, uncle.color = "B", "B"
+                    grandparent.color = "R"
+                    new_node = grandparent
+                else:
+                    if new_node == parent.left:
+                        new_node = parent
+                        # TODO: Right rotate
+                    parent.color = "B"
+                    grandparent.color = "R"
+                    # TODO: Left rotate
+            else:
+                uncle = grandparent.right
+                if uncle.color == "R":
+                    parent.color, uncle.color = "B", "B"
+                    grandparent.color = "R"
+                    new_node = grandparent
+                else:
+                    if parent.left == new_node:
+                        new_node = parent
+                        # TODO: Right rotate
+                    parent.color = "B"
+                    grandparent.color = "R"
+                    # TODO: Left rotate
+        self.root.color = "B"
+
+
+
+
+
+
 
 
     def insert_node(self, root, keyword, datetimes):
