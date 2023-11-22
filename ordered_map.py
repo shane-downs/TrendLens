@@ -1,6 +1,3 @@
-
-class red_black_tree:
-    pass
-class unordered_map:
+class OrderedMap:
     def __init__(self):
         pass
