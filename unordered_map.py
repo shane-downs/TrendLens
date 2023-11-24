@@ -6,6 +6,11 @@ class unordered_map:        # map backed up by hash table. Key is a keyword, val
         self.map = HashTable()      # map is just a hash table
         self.size = 0
 
+    def InsertAll(self, articleList):       # takes a list of article objects and inserts them all into the map
+        for article in articleList:     # for every article object in the list of article objects
+            self.size += 1      # increment the size by 1
+            self.map.Insert(article)        # insert the article into the map
+
     def ClearMap(self):     # clear the contents of the map
         self.map = HashTable()      # overwrite the current map with a new hashtable object that is empty
         self.size = 0               # reset size to 0

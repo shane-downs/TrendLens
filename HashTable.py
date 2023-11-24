@@ -11,8 +11,10 @@ class HashTable:        # hash table where each index is a list. Each list holds
             self.table.append([])
 
     def Hash(self, article):        # returns an integer that is the hashed value derived from the article keyword
-        # first we need to reverse the article keyword so that our indexing later is correct
-        keyword = article.keyword[::-1]
+        # first let's convert the article to lowercase so that our keywords aren't case-sensitive
+        keyword = article.keyword.lower()
+        # then we need to reverse the article keyword so that our indexing later is correct
+        keyword = keyword[::-1]
         index = 0
         for i in range(len(keyword)):       # iterate through keyword
             index += ord(keyword[i]) * pow(27, i)       # multiply the unicode value of current char by 27^i
@@ -43,29 +45,25 @@ class HashTable:        # hash table where each index is a list. Each list holds
 
         # now, increment table variables and check load factor
         self.buckets += 1      # increment the number of total articles
-        if ((self.buckets / self.tableSize) >= self.LOAD_FACTOR):   # if  we are at/over load factor, we need to resize and rehash
+        if ((self.buckets / self.tableSize) >= self.LOAD_FACTOR):   # if  we are at/over load factor, we need to resize and rehash all sub-lists
             self.tableSize *= 2     # double the size of our table
             newTable = []       # new table which will replace the current table
             for i in range(self.tableSize):     # add a sub-list for every possible spot in the table
                 newTable.append([])
             for i in range(int(self.tableSize / 2) - 1):     # for every sub-list in original table...
-                for j in range(len(self.table[i])):        # for every article in the table list (it will skip over if empty)
-                    # get the hash index again
-                    newHashIndex = self.Hash(self.table[i][j])
+                if (len(self.table[i]) > 0):        # if the sub-list isn't empty we need to rehash it
+                    # get the hashIndex for the first item in the list (the index will be the same for any item in the list)
+                    newHashIndex = self.Hash(self.table[i][0])
                     # we might have to quadratic probing to insert, so prepare for that again
                     for k in range(self.tableSize - 1):  # iterate through size of new table (so our quadratic probing covers the entirety of new table)
                         quadIndex = (k ** 2) % self.tableSize  # this increases our index quadratically -> (0, 1, 4, 9, 16...)
                         currIndex = (newHashIndex + quadIndex) % self.tableSize     # current index in our new table to look at
-                        # since each spot in the table represents a different keyword we need to check if inserting this creates conflict
+                        # since each spot in the table represents a different keyword we need to check if the spot is taken by another keyword
                         if (len(newTable[currIndex]) == 0):  # if it is empty, there won't be conflict
-                            newTable[currIndex].append(self.table[i][j])  # so just append the article we are referring to in OG table to the new table at that sub-list
-                            break  # and break out of the for loop to move on to the next article in the OG table
-                        else:  # otherwise there is something here, so lets check if it has the same keyword as our article
-                            if (newTable[currIndex][0].keyword == self.table[i][j].keyword):  # if they have the same keyword
-                                newTable[currIndex].append(self.table[i][j])  # add the corresponding article to the new table's correct sub-list
-                                break  # and then break out of the for loop to go to next article in OG table
-                            else:  # if there was something there that was a conflict, in which case we continue with quadratic probing
-                                continue  # we continue in the for loop (this conditional isn't necessary but helps readability)
+                            newTable[currIndex] = self.table[i]  # so put the whole OG sub-list in that spot
+                            break  # and break out of the for loop to move on to the next sub-list in the OG table
+                        else:  # otherwise there is something here, since we are adding the whole list it must be a diff keyword
+                            continue        # so continue to next quadratic probing iteration
 
             # now that we are done going through the table and rehashing all of our items, update self.table
             self.table = newTable
