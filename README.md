@@ -9,6 +9,10 @@ The unordered map class needs two other files to work, a class called Article an
 **unordered_map:**
   Contains attributes self.map and self.size. Attribute self.map is what holds the actual data and self.size is the number of unique Article objects in our map.
   Keys in our map are the keywords of articles, values are lists of all the articles with that keyword. Keys/keywords are NOT case-sensitive.
+
+  InsertAll(articleList) - takes a parameter articleList which is a list of Article objects. Returns nothing. We insert every Article object in the list into the
+    unordered map via the insertion function of the hash table. We also increment the size of the map.
+    O(n) where n is the number of Article objects in the articleList parameter.
   
   ClearMap() - erases all the data inside the map by replacing self.map with a new instance of the HashTable class.
     O(1)
@@ -58,11 +62,11 @@ The unordered map class needs two other files to work, a class called Article an
     load factor. To find our load factor divide the size of the table with the number of buckets in the table. If the result is greater than self.LOAD_FACTOR we 
     need to resize our table and rehash all our values. So, we multiply self.tableSize by the resizing factor which is 2. Then we declare a new table which we will 
     insert the rehashed values into so that we don't overwrite the buckets in our original table while we are still trying to access it. After declaring this table
-    we add {self.tableSize} number of empty lists. Then we iterate through every article in the hash table and get the new hash value. For each of these article we 
-    go through the aforementioned process of inserting something into the table and using quadratic probing to resolve collisions. At the end after we have rehashed
-    the entire list we assign self.table with newTable. This may be able to improved by rehashing only the first article from every sub-list and inserting the 
-    entire list at the new spot.
-    O(1) amortized - O(n) otherwise
+    we add {self.tableSize} number of empty lists. Then we iterate through every sub-list in the hash table and get the new hash value for any article in that
+    list. For each sub-list we assign it to the spot it goes to (using the hashIndex and quadIndex). This way we move the entire sub-list at once instead of moving
+    each article object in the sub-list. This significantly decreases our time complexity from O(n) where n is the number of unique Article objects to O(b) where b
+    is the number of buckets (or unique keywords) in the hash table. At the end after we have rehashed every sub-list we assign newTable to self.table.
+    O(1) amortized - O(b) otherwise
     
   Access(keyword) - returns a list of every article that has the same keyword as the keyword parameter. The keyword paramater must be a string. We hash the keyword
     and then use quadratic probing to look through the table until we find the sub-list that has that keyword. If we never find it we return an empty list.
