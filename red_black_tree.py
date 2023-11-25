@@ -1,11 +1,14 @@
 from node import Node
 from collections import deque
+'''
+Code snippets from Shane Downs Gator AVL project 1 submission
+red black tree algorithm advice from Programiz
+'''
 
 
 class RedBlackTree:
 
     def __init__(self):
-        self.height = 0
         self.root = None
 
     def left_rotate(self, n):
