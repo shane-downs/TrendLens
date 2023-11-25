@@ -7,10 +7,6 @@ class RedBlackTree:
     def __init__(self):
         self.height = 0
         self.root = None
-        # self.ll = False
-        # self.lr = False
-        # self.rr = False
-        # self.rl = False
 
     def left_rotate(self, n):
         child = n.right
@@ -64,11 +60,9 @@ class RedBlackTree:
                 else:
                     if new_node == parent.left:
                         new_node = parent
-                        # TODO: Right rotate new_node
                         self.right_rotate(new_node)
                     parent.color = "B"
                     grandparent.color = "R"
-                    # TODO: Left rotate gP
                     self.left_rotate(grandparent)
             else:
                 uncle = grandparent.right
@@ -79,12 +73,10 @@ class RedBlackTree:
                 else:
                     if new_node == parent.right:
                         new_node = parent
-                        # TODO: left rotate new_node
                         self.left_rotate(new_node)
 
                     parent.color = "B"
                     grandparent.color = "R"
-                    # TODO: right rotate
                     self.right_rotate(grandparent)
             if new_node == self.root:
                 break
