@@ -89,7 +89,7 @@ class RedBlackTree:
         new_node = Node(keyword, datetimes)
         if root is None:
             new_node.color = "B"
-            self.root = new_node
+            self.root = new_node   # First node in the tree, create root
             return root
 
         current = root
@@ -97,57 +97,140 @@ class RedBlackTree:
 
         while current is not None:
             parent = current
-            if keyword < current.keyword:
+            if keyword < current.keyword:  # Traverse left subtree
                 current = current.left
             else:
-                current = current.right
+                current = current.right  # Traverse right subtree
 
         if keyword < parent.keyword:
-            new_node.color = "R"
             parent.left = new_node
-            new_node.parent = parent
+            new_node.parent = parent   # Assign parent nodes
         else:
-            new_node.color = "R"
             parent.right = new_node
             new_node.parent = parent
 
-        self.insert_helper(new_node)
+        self.insert_helper(new_node)  # Branch to insertion helper to maintain red black properties
 
     def print_bfs(self, root):
-        node_queue = deque()
-        height_queue = deque()
+        node_queue = deque()   # Queue for traversing root node then adj nodes down to leaves
+        height_queue = deque()  # Height queue to print nodes on same lvl
         node_queue.append(root)
         height = 1
         height_queue.append(height)
-        current_lvl = 1
+        current_lvl = 1  # Maintain lvl to print nodes on same line
 
-        while bool(node_queue):
-            height = height_queue.popleft()
+        while bool(node_queue):  # while not empty
+            height = height_queue.popleft()   # Get current node and height
             current = node_queue.popleft()
-            if height > current_lvl:
+            if height > current_lvl:   # Update current lvl
                 print("\n")
                 current_lvl = height
 
-            print(current.keyword, end=" ")
+            print(current.datetimes, end=" ")
 
-            if current.left is not None:
+            if current.left is not None:    # Traverse left subtree
                 node_queue.append(current.left)
                 height_queue.append(height + 1)
 
-            if current.right is not None:
+            if current.right is not None:   # Traverse right subtree
                 node_queue.append(current.right)
                 height_queue.append(height + 1)
 
     def search_red_black(self, root, keyword):
         current = root
 
-        while current is not None:
-            if current.keyword == keyword:
-                return current
+        while current is not None:   # While curr is not a leaf
+            if current.keyword == keyword:   # Found the matching node
+                return current.datetimes
 
-            if keyword < current.keyword:
+            if keyword < current.keyword:   # Traverse left subtree
+                current = current.left
+            else:
+                current = current.right   # Traverse right subtree
+
+        return root.datetimes
+
+    def inorder_traverse(self, root):
+        if root is not None:    # LNR
+            yield from self.inorder_traverse(root.left)  # Yield keyword used for iter over large datasets
+            yield root.keyword, root.datetimes
+            yield from self.inorder_traverse(root.right)
+
+    def delete_node(self, root, keyword):
+        current = root
+
+        while current is not None:
+            if current.keyword == keyword:  # Found the matching node
+                self.delete_helper(current)
+
+            if keyword < current.keyword:  # Traverse left subtree
                 current = current.left
             else:
                 current = current.right
 
-        return root
+    def delete_helper(self, node):
+        original_color = node.color
+
+        # Delete leaf node
+        if node.left is None and node.right is None:
+            if node.parent.left == node:
+                node.parent.left = None
+            else:
+                node.parent.right = None
+
+            node.double_black = True
+
+        # Delete node w/ 1 child
+        elif node.left is None and node.right is not None:
+            parent = node.parent
+            child = node.right
+            if parent.left == node:
+                parent.left = child
+            else:
+                parent.right = child
+
+            del node
+
+        elif node.left is not None and node.right is None:
+            parent = node.parent
+            child = node.left
+            if parent.right == node:
+                parent.right = child
+            else:
+                parent.left = child
+
+            del node
+
+        # Deletion w/ 2 children
+        elif node.right is not None:
+            parent = node.parent
+
+            if node.right.left is not None:
+                inorder_successor = node.right.left
+            else:
+                inorder_successor = node.right
+
+            if parent == node:
+                inorder_successor.left = node.left
+                if node.right.left == inorder_successor:
+                    inorder_successor.right = node.right
+                    node.right.left = None
+
+                if node.right == inorder_successor:
+                    node.right = None
+
+                self.root = inorder_successor
+
+                del node
+
+            if parent.right == node:
+                if node.left is not None:
+                    inorder_successor.left = node.left
+                parent.right = inorder_successor
+                del node
+
+            else:
+                if node.left is not None:
+                    inorder_successor.left = node.left
+                parent.left = inorder_successor
+                del node

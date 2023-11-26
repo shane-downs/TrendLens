@@ -1,13 +1,16 @@
-from red_black_tree import RedBlackTree
-from node import Node
+from ordered_map import OrderedMap
 
 if __name__ == "__main__":
-    rb_tree = RedBlackTree()
-    rb_tree.insert_node(rb_tree.root, "NBA", "10/17/2004")
-    rb_tree.insert_node(rb_tree.root, "Rob Gronkowski", "1/12/2008")
-    rb_tree.insert_node(rb_tree.root, "Jamie Benn", "9/19/2009")
-    rb_tree.insert_node(rb_tree.root, "Peter James", "6/16/2066")
-    rb_tree.insert_node(rb_tree.root, "Michael Jordan", "3/33/2033")
-    rb_tree.insert_node(rb_tree.root, "Lebron Alan", "1/12/2077")
-    node = rb_tree.search_red_black(rb_tree.root, "Michael Jordan")
-    print(f"\n {node.datetimes}")
+    nyt_map = OrderedMap()
+    nyt_map["Michael Jordan"] = "10/20/2002"
+    nyt_map["Lebron James"] = "09/27/1999"
+    nyt_map["Karl Malone"] = "01/06/2003"
+    nyt_map["Kareem Abdul Jabar"] = "07/08/1986"
+    nyt_map["Isaiah Thomas"] = "08/17/2005"
+    nyt_map["Dennis Rodman"] = "04/06/2009"
+    nyt_map["Magic Johnson"] = "12/31/1995"
+
+    nyt_map["Dennis Rodman"] = "-1"
+
+    for i in nyt_map:
+        print(i)
