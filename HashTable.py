@@ -68,7 +68,7 @@ class HashTable:        # hash table where each index is a list. Each list holds
             # now that we are done going through the table and rehashing all of our items, update self.table
             self.table = newTable
 
-    def Access(self, keyword):   # takes a keyword and returns a list of articles with that keyword (or empty list if key doesn't exist)
+    def Access(self, keyword, getIndex=False):   # takes a keyword and returns a list of articles with that keyword (or empty list if key doesn't exist)
         # first get hash that keyword is hopefully at (the reason it wouldn't be here would be because of quadratic probing)
         hashIndex = self.Hash(Article("None", keyword, -1, -1))     # generate it with a garbage Article object (the only part we need is the keyword part)
         # if it isn't at keyHash we may have to do quadratic probing to find it so prepare for that
@@ -77,7 +77,41 @@ class HashTable:        # hash table where each index is a list. Each list holds
             currIndex = (hashIndex + quadIndex) % self.tableSize        # the current index we are looking at in our table
             # check if the current sub-list is the right list
             if ((len(self.table[currIndex]) > 0) and (self.table[currIndex][0].keyword == keyword)):        # if the sub-list isn't empty and has the same keyword
-                return self.table[currIndex]           # return that list since it is a list of all the right keywords
+                if (getIndex):
+                    return (self.table[currIndex], currIndex)       # return a tuple of the sub-list and its index
+                else:       # otherwise just return the list
+                    return self.table[currIndex]           # return that list since it is a list of all the right keywords
             else:       # if it wasn't the right keyword
                 continue        # we continue quadratic probing (this conditional isn't necessary but is for readability)
-        return []       # if we get here we did not find the keyword in the hash table so return -1
+        if (getIndex):      # if we need the index return an empty list and an index of -1
+            return ([], -1)
+        else:       # otherwise just return an empty list
+            return []       # if we get here we did not find the keyword in the hash table so return -1
+
+    def DeleteSubList(self, keyword):       # takes a keyword and deletes all articles with that keyword
+        # get the sub-list and it's index in the hash table
+        accessResult = self.Access(keyword, getIndex=True)
+        subList = accessResult[0]        # sub-list is the first thing returned
+        subListIndex = accessResult[1]      # the index is the second thing returned
+
+        if (subListIndex == -1):        # check if the index is -1 (we didn't find it)
+            return          # return because the sub-list doesn't exist
+        # if we didn't return, just delete the whole sub-list
+        self.buckets = self.buckets - len(subList)     # decrease number of buckets before we delete it
+        self.table[subListIndex] = []       # reassign the spot of the sub-list with an empty list
+
+    def DeleteArticle(self, article):   # takes an Article object to be deleted
+        # get the sub-list and it's index in the hash table
+        accessResult = self.Access(article.keyword, getIndex=True)
+        subList = accessResult[0]        # sub-list is the first thing returned
+        subListIndex = accessResult[1]      # the index is the second thing returned
+
+        # now we need to see if we found the sub-list
+        if (subListIndex == -1):        # if the sub-list index is -1, we didn't find it
+            return      # if the sub-list is empty, return because the article doesn't exist
+        # if we didn't return we found the right sub-list, so let's try to delete the article
+        for i in range(len(subList)):     # iterate through every article in the sub-list to find it
+            if (subList[i] == article):      # if they are the same article object
+                del self.table[subListIndex][i]     # delete the article element at that index from the hash table
+                self.buckets -= 1
+                return
