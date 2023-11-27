@@ -19,8 +19,16 @@ The unordered map class needs two other files to work, a class called Article an
     
   GetSize() - returns self.map which is the number of unique Article objects that have been added to our map.
     O(1)
-    
-  getitem(key) - returns a list of all the items in the map that have the same keyword as the key parameter. If the key does not exist in the map, there      is
+
+  DeleteValue(article) - returns nothing, this deletes a specific article object from the map. article must be an Article object. Calls DeleteArticle(article) from 
+    the HashTable class. Then assigns the size of the HashTable (self.map.buckets) to the self.size attribute. We do this because we don't know if the article was
+    successfully delete (the article may not have existed) and so if we properly decremented the number of buckets in the hash table then assigning self.size with 
+    that should give us the correct size.
+    Example: "myMap.DeleteArticle(articleObject1)" This deletes articleObject1 from our map.
+    O(n) where n is the number of article in the sub-list. This is because we have to find the specific article in the sub-list which is just an unsorted list.
+    This is higher than other functions because they do not return a specific article, they return the sub-list.
+  
+  getitem(key) - returns a list of all the items in the map that have the same keyword as the key parameter. If the key does not exist in the map, there is
     nothing to return so the function will return an empty list. This supports the use of brackets to access values from the map. This function works by using      
     the Access(key) function of the HashTable class (detailed below). The key must be a string.
     Example: "keyList = myMap["Dirt"]" This will assign a list of all the Article objects with the keyword "Dirt" to keyList.
@@ -30,6 +38,12 @@ The unordered map class needs two other files to work, a class called Article an
     instance. Then it uses the Insert(value) function of the HashTable class to add the Article object passed in through the value parameter to the hash table. The     key parameter is not actually used, but must be included so that this function supports the bracket operators for assignment. The value parameter must be an        Article object.
     Example: "myMap[articleObj.keyword] = articleObj" This will insert something into the map with a key of the article object's keyword and a value of the article     object. 
     O(1) amortized
+
+  delitem(key) - returns nothing, this function deletes a entire key-value pair from the map. This supports the use of brackets and the "del" keyword. In our
+    implementation the value is a list of article that all share the same keyword (the value) so this function effectively deletes an entire sub-list from the hash     table. We accomplish this by calling DeleteSubList(key) from the HashTable class. Then we decrement the size of our table in the same way as in 
+    DeleteValue(article) mentioned above.
+    Example: "del myMap["Dirt"]" This will delete the value associated with "Dirt" and then decrement the size by the amount of objects removed.
+    O(1) 
     
   contains(key) - returns a boolean. This function is used to check if a certain key has any article inserted with it in the map. The key parameter must be a           string. Then we use the Access(key) function of the HashTable to get a list of all Article objects with that keyword. If the length of the resulting list is        0 there are no articles with that as a keyword in our HashTable, so it wouldn't be in the map either. Thus we return false. Otherwise, if the length of the         resulting list is > 0, we return true. This function supports the "in" keyword.
     Example: "if ('Dirt' in myMap)..." The conditional part of this will return true if there is an article in the map with a keyword of 'Dirt'
@@ -68,9 +82,11 @@ The unordered map class needs two other files to work, a class called Article an
     is the number of buckets (or unique keywords) in the hash table. At the end after we have rehashed every sub-list we assign newTable to self.table.
     O(1) amortized - O(b) otherwise
     
-  Access(keyword) - returns a list of every article that has the same keyword as the keyword parameter. The keyword paramater must be a string. We hash the keyword
-    and then use quadratic probing to look through the table until we find the sub-list that has that keyword. If we never find it we return an empty list.
+  Access(keyword, getIndex=false) - returns a list of every article that has the same keyword as the keyword parameter. The keyword paramater must be a string. 
+    The getIndex parameter lets us know if we need to return the index of the sub-list as well. We hash the keyword and then use quadratic probing to look through      the table until we find the sub-list that has that keyword. If we find it and getIndex was true we return a tuple of the sub-list and its index which is just       "currIndex" at the point where we found it. If getIndex was False we just return the sub-list. If we never find it we return a tuple of the empty list and an       index of -1 (if getIndex is True). 
     O(1)
+
+  DeleteSubList(keyword) - returns nothing; deletes an entire sub-list from the hash table. First we get the sub-list that we want to delete and its index in the       hash table by calling the Access() function from this class. We pass in the keyword as the first parameter and then getIndex=True as the second. This returns a     tuple. We assign the first value of of the result to subList and the second value to subListIndex. Then we check if subListIndex was -1, this would indicate        that the sub-list didn't exist in which case we return because there is nothing to delete. Then we reassign the correct spot at the hash table with an empty        list, effectively deleting the contents of the list. Finally, we decrement self.buckets by the length of the sub-list we just deleted.                              O(1)                                                                                                                                                                                                                                                                                                                                  DeleteArticle(article) - returns nothing; deletes a singular article entry from the hash table. The first part of this function is very similar to                    DeleteSubList() until we confirm that the sub-list this article should exist in has contents. After that we need to find the actual article. So we iterate          through the entire sub-list until we find it. Then we use the "del" keyword to delete it from the hash table. Following that we decrement self.buckets by 1         since we just deleted something from the table. If the article doesn't exist we will have never found it and will exit the function.                                O(n) where n is the number of article objects in the sub-list. This is because we have to iterate through the entire sub-list to find the article to delete.
     
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
