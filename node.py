@@ -7,4 +7,3 @@ class Node:
         self.height = 0
         self.datetimes = datetimes
         self.color = "R"
-        self.double_black = False

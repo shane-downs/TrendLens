@@ -9,8 +9,8 @@ if __name__ == "__main__":
     nyt_map["Isaiah Thomas"] = "08/17/2005"
     nyt_map["Dennis Rodman"] = "04/06/2009"
     nyt_map["Magic Johnson"] = "12/31/1995"
+    nyt_map["Magic Johnson"] = "06/08/2022"
 
-    nyt_map["Dennis Rodman"] = "-1"
+    nyt_map.rb_tree.print_bfs(nyt_map.rb_tree.root)
 
-    for i in nyt_map:
-        print(i)
+    print(nyt_map["Magic Johnson"])

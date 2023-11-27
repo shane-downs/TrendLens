@@ -141,14 +141,14 @@ class RedBlackTree:
 
         while current is not None:   # While curr is not a leaf
             if current.keyword == keyword:   # Found the matching node
-                return current.datetimes
+                return current
 
             if keyword < current.keyword:   # Traverse left subtree
                 current = current.left
             else:
                 current = current.right   # Traverse right subtree
 
-        return root.datetimes
+        return -1
 
     def inorder_traverse(self, root):
         if root is not None:    # LNR
@@ -156,8 +156,9 @@ class RedBlackTree:
             yield root.keyword, root.datetimes
             yield from self.inorder_traverse(root.right)
 
-    def delete_node(self, root, keyword):
+    def delete_node(self, root):
         current = root
+        keyword = root.keyword
 
         while current is not None:
             if current.keyword == keyword:  # Found the matching node
@@ -169,68 +170,164 @@ class RedBlackTree:
                 current = current.right
 
     def delete_helper(self, node):
+        if node is None:
+            return
+
         original_color = node.color
 
-        # Delete leaf node
-        if node.left is None and node.right is None:
-            if node.parent.left == node:
-                node.parent.left = None
-            else:
-                node.parent.right = None
+        if node.left is None:
+            x = node.right
+            self.swap_nodes(node, x)
 
-            node.double_black = True
-
-        # Delete node w/ 1 child
-        elif node.left is None and node.right is not None:
-            parent = node.parent
-            child = node.right
-            if parent.left == node:
-                parent.left = child
-            else:
-                parent.right = child
-
-            del node
-
-        elif node.left is not None and node.right is None:
-            parent = node.parent
-            child = node.left
-            if parent.right == node:
-                parent.right = child
-            else:
-                parent.left = child
-
-            del node
-
-        # Deletion w/ 2 children
-        elif node.right is not None:
-            parent = node.parent
-
-            if node.right.left is not None:
+        elif node.right is None:
+            x = node.left
+            self.swap_nodes(node, x)
+        else:
+            if node.right.left is not None:  # Find inorder successor
                 inorder_successor = node.right.left
             else:
                 inorder_successor = node.right
 
-            if parent == node:
-                inorder_successor.left = node.left
-                if node.right.left == inorder_successor:
-                    inorder_successor.right = node.right
-                    node.right.left = None
+            original_color = inorder_successor.color
+            x = inorder_successor.right
 
-                if node.right == inorder_successor:
-                    node.right = None
-
-                self.root = inorder_successor
-
-                del node
-
-            if parent.right == node:
-                if node.left is not None:
-                    inorder_successor.left = node.left
-                parent.right = inorder_successor
-                del node
+            if node.right == inorder_successor:
+                x.parent = inorder_successor
 
             else:
-                if node.left is not None:
-                    inorder_successor.left = node.left
-                parent.left = inorder_successor
-                del node
+                self.swap_nodes(inorder_successor, inorder_successor.right)
+                inorder_successor.right = node.right
+                inorder_successor.right.parent = inorder_successor
+
+            self.swap_nodes(node, inorder_successor)
+            inorder_successor.left = node.left
+            inorder_successor.left.parent = inorder_successor
+            inorder_successor.color = node.color
+        if original_color == "B":
+            self.fix_rb_delete(x)
+
+
+        # # Deletion w/ 2 children
+        # if node.right is not None and node.left is not None:  # node is "x", inorder successor is "y"
+        #     if node.right.left is not None:  # Find inorder successor
+        #         inorder_successor = node.right.left
+        #     else:
+        #         inorder_successor = node.right
+        #
+        #     if parent is None:
+        #         inorder_successor.left = node.left
+        #         if node.right.left == inorder_successor:
+        #             inorder_successor.right = node.right
+        #             node.right.left = None
+        #
+        #         if node.right == inorder_successor:
+        #             node.right = None
+        #
+        #         self.root = inorder_successor
+        #
+        #     if parent.right == node:
+        #         if node.left is not None:
+        #             inorder_successor.left = node.left
+        #         parent.right = inorder_successor
+        #
+        #     else:
+        #         if node.left is not None:
+        #             inorder_successor.left = node.left
+        #         parent.left = inorder_successor
+        #
+        #     if inorder_successor.color == "B" and node.color == "B":
+        #         self.fix_rb_delete(inorder_successor)
+        #     else:
+        #         del node
+        #
+        # # Delete leaf node
+        # if node.left is None and node.right is None:  # node is "x", double_black is "y"
+        #     node.color = "B"
+        #     self.fix_rb_delete(node)
+        #
+        # # Delete node w/ 1 child
+        # if node.left is None and node.right is not None:  # node is "x", child is "y"
+        #     child = node.right
+        #     if parent.left == node:
+        #         parent.left = child
+        #     else:
+        #         parent.right = child
+        #
+        #     if node.color == "B" and child.color == "B":
+        #         self.fix_rb_delete(child)
+        #     else:
+        #         del node
+        #
+        # if node.left is not None and node.right is None:
+        #     child = node.left
+        #     if parent.right == node:
+        #         parent.right = child
+        #     else:
+        #         parent.left = child
+        #
+        #     if node.color == "B" and child.color == "B":
+        #         self.fix_rb_delete(child)
+        #     else:
+        #         del node
+
+    def swap_nodes(self, a, b):
+        if a.parent is None:
+            self.root = b
+
+        if a.parent.left == a:
+            a.parent.left = b
+        else:
+            a.parent.right = b
+        b.parent = a.parent
+    def fix_rb_delete(self, node_to_del):
+        parent = node_to_del.parent
+
+        while not node_to_del == self.root and node_to_del.color == "B":
+            if parent.left == node_to_del:
+                sibling = parent.right
+                if sibling is not None and sibling.color == "R":
+                    sibling.color = "B"
+                    parent.color = "R"
+                    self.left_rotate(parent)
+                    sibling = parent.right
+
+                if sibling is not None and sibling.left.color == "B" and sibling.right.color == "B":
+                    sibling.color = "R"
+                    node_to_del = parent
+                else:
+                    if sibling is not None and sibling.right.color == "B":
+                        sibling.left.color = "B"
+                        sibling.color = "R"
+                        self.right_rotate(sibling)
+                        sibling = parent.right
+
+                    sibling.color = parent.color
+                    parent.color = "B"
+                    sibling.right.color = "B"
+                    self.left_rotate(parent)
+                    self.root = node_to_del
+            else:
+                sibling = parent.left
+                if sibling is not None and sibling.color == "R":
+                    sibling.color = "B"
+                    parent.color = "R"
+                    self.right_rotate(parent)
+                    sibling = parent.left
+
+                if sibling is not None and sibling.right.color == "B" and sibling.left.color == "B":
+                    sibling.color = "R"
+                    node_to_del = parent
+                else:
+                    if sibling is not None and sibling.left.color == "B":
+                        sibling.right.color = "B"
+                        sibling.color = "R"
+                        self.left_rotate(sibling)
+                        sibling = parent.left
+
+                    sibling.color = parent.color
+                    parent.color = "B"
+                    sibling.left.color = "B"
+                    self.right_rotate(parent)
+                    self.root = node_to_del
+        # Case 2
+        self.root.color = "B"
