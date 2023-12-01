@@ -1,5 +1,6 @@
 from node import Node
 from collections import deque
+
 '''
 Code snippets from Shane Downs Gator AVL project 1 submission
 red black tree algorithm advice from Programiz
@@ -89,7 +90,7 @@ class RedBlackTree:
         new_node = Node(keyword, datetimes)
         if root is None:
             new_node.color = "B"
-            self.root = new_node   # First node in the tree, create root
+            self.root = new_node  # First node in the tree, create root
             return root
 
         current = root
@@ -104,7 +105,7 @@ class RedBlackTree:
 
         if keyword < parent.keyword:
             parent.left = new_node
-            new_node.parent = parent   # Assign parent nodes
+            new_node.parent = parent  # Assign parent nodes
         else:
             parent.right = new_node
             new_node.parent = parent
@@ -112,7 +113,7 @@ class RedBlackTree:
         self.insert_helper(new_node)  # Branch to insertion helper to maintain red black properties
 
     def print_bfs(self, root):
-        node_queue = deque()   # Queue for traversing root node then adj nodes down to leaves
+        node_queue = deque()  # Queue for traversing root node then adj nodes down to leaves
         height_queue = deque()  # Height queue to print nodes on same lvl
         node_queue.append(root)
         height = 1
@@ -120,38 +121,38 @@ class RedBlackTree:
         current_lvl = 1  # Maintain lvl to print nodes on same line
 
         while bool(node_queue):  # while not empty
-            height = height_queue.popleft()   # Get current node and height
+            height = height_queue.popleft()  # Get current node and height
             current = node_queue.popleft()
-            if height > current_lvl:   # Update current lvl
+            if height > current_lvl:  # Update current lvl
                 print("\n")
                 current_lvl = height
 
             print(current.datetimes, end=" ")
 
-            if current.left is not None:    # Traverse left subtree
+            if current.left is not None:  # Traverse left subtree
                 node_queue.append(current.left)
                 height_queue.append(height + 1)
 
-            if current.right is not None:   # Traverse right subtree
+            if current.right is not None:  # Traverse right subtree
                 node_queue.append(current.right)
                 height_queue.append(height + 1)
 
     def search_red_black(self, root, keyword):
         current = root
 
-        while current is not None:   # While curr is not a leaf
-            if current.keyword == keyword:   # Found the matching node
+        while current is not None:  # While curr is not a leaf
+            if current.keyword == keyword:  # Found the matching node
                 return current
 
-            if keyword < current.keyword:   # Traverse left subtree
+            if keyword < current.keyword:  # Traverse left subtree
                 current = current.left
             else:
-                current = current.right   # Traverse right subtree
+                current = current.right  # Traverse right subtree
 
         return -1
 
     def inorder_traverse(self, root):
-        if root is not None:    # LNR
+        if root is not None:  # LNR
             yield from self.inorder_traverse(root.left)  # Yield keyword used for iter over large datasets
             yield root.keyword, root.datetimes
             yield from self.inorder_traverse(root.right)
@@ -205,7 +206,6 @@ class RedBlackTree:
             inorder_successor.color = node.color
         if original_color == "B":
             self.fix_rb_delete(x)
-
 
         # # Deletion w/ 2 children
         # if node.right is not None and node.left is not None:  # node is "x", inorder successor is "y"
@@ -279,6 +279,7 @@ class RedBlackTree:
         else:
             a.parent.right = b
         b.parent = a.parent
+
     def fix_rb_delete(self, node_to_del):
         parent = node_to_del.parent
 
