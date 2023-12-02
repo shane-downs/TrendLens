@@ -1,7 +1,6 @@
 from flask import Flask, jsonify
 from ordered_map import OrderedMap
 from unordered_map import unordered_map
-from fetch import *
 
 app = Flask(__name__)
 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
