@@ -37,11 +37,12 @@ def update_graph(start_year, end_year, keyword):
 @app.callback(
     Output("line-plot", "figure"),
     [Input('submit-val', 'n_clicks')],
-    [Input('start-year-input', 'value'),
-     Input('end-year-input', 'value'),
-     Input('keyword-input', 'value')]
+    [State('start-year-input', 'value'),
+     State('end-year-input', 'value'),
+     State('keyword-input', 'value')]
+
 )
-def handleSubmit(clicked, start_year, end_year, keyword):
+def updateOutput(clicked, start_year, end_year, keyword):
     if clicked == 0:
         return Dash.no_update
     else:
