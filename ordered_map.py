@@ -1,5 +1,6 @@
 from red_black_tree import RedBlackTree
 
+
 class OrderedMap:
     def __init__(self):
         self.rb_tree = RedBlackTree()

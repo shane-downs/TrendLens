@@ -1,7 +1,22 @@
-from flask import Flask
+from flask import Flask, jsonify
 from ordered_map import OrderedMap
+from unordered_map import unordered_map
 
 app = Flask(__name__)
+app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
+
+
+class GraphData:
+    def __init__(self):
+        self.ordered_map = OrderedMap()
+        self.unordered_map = unordered_map()
+
+    def insert_all_ordered(self):
+        pass
+
+    def insert_all_unordered(self):
+        pass
+
 
 @app.route('/')
 def hello_world():
