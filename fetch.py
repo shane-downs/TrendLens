@@ -14,13 +14,28 @@ class Article:
         self.keyword = keywords
 
 
-def getArticlesFromAPI(startYear, endYear):
-    api_key = 'CqAGNdgXrh1N2aDKZhnF7tWLeAKrDYwj'
-    articleArray = [["test1", "test1", "test1", "test1", "test1"]]
+def writeArticlesToRawCSV(array):    # never used again since we only needed to do it once
+    col_headers = ["Title", "Year", "Month", "Url", "Keyword"]
+    filename = "nyt_data.csv"
+    with open(filename, 'w', encoding='utf-8', newline='') as csvfile:
+        # creating a csv writer object
+        csvwriter = csv.writer(csvfile)
+
+        # writing the fields
+        csvwriter.writerow(col_headers)
+
+        for i in array:
+            # writing the data rows
+            row = [i.title, i.year, i.month, i.url, ", ".join(i.keyword)]
+            csvwriter.writerow(row)
+
+
+def getArticlesFromAPI(array, startYear, endYear):     # never used again since we only needed to do it once
+    api_key = 'rw3uRjFP0HcePAbOw7629sEzEWSnfZcU'
 
     # iterating through entire new york times archive api
     for i in range(startYear, endYear):
-        for j in range(13):
+        for j in range(1, 13):
             year = i
             month = j
 
@@ -41,8 +56,8 @@ def getArticlesFromAPI(startYear, endYear):
                         # checking for publish dates aka checking if the month of articles is empty
                         if 'pub_date' not in article_data:
                             continue
-                        
-                        # titles, url, time 
+
+                        # titles, url, time
                         title = article_data['headline']['main']
                         url = article_data['web_url']
                         # time structure is "year-month-day-hours:minutes:seconds+0000"
@@ -50,69 +65,30 @@ def getArticlesFromAPI(startYear, endYear):
                         # T is just a string to represent time
 
                         time = article_data['pub_date']
-                        yearPub = time[0:4]
-                        monthPub = time[6:7]
+                        year_pub = time[0:4]
+                        month_pub = time[6:7]
 
                         # extracting  keywords
-                        # old (got all keys) keywords = [keyword['value'] for keyword in article_data.get('keywords', [])]
-                        # new (gets 1st key) \/
-                        keywords = [article_data.get('keywords', [])[0]['value']] if article_data.get('keywords') else []
+                        keywords = [article_data.get('keywords', [])[0]['value']] if article_data.get(
+                            'keywords') else []
+                        if not keywords:
+                            continue
 
-                        articleArray.append([title, yearPub, monthPub, url, keywords])
+                        array.append(Article(title, year_pub, month_pub, url, keywords))
 
-                    for article_info in articleArray:
-                        print("got one!")
-                        # print("Title:", article_info.headline)
-                        # print("URL:", article_info.url)
-                        # print("Date Published:", article_info.year, "-", article_info.month)
-                        # print("Keywords:", ", ".join(article_info.keywords))
-                        # print("\n" + "=" * 50 + "\n")
+                    # for article_info in array:
+                    #     print("Title:", article_info.title)
+                    #     print("URL:", article_info.url)
+                    #     print("Date Published:", article_info.year, "-", article_info.month)
+                    #     print("Keywords:", ", ".join(article_info.keyword))
+                    #     print("\n" + "=" * 50 + "\n")
                 else:
                     print("Error: 'response' or 'docs' keys not found in the API response.")
             else:
                 # Print an error message if the request was not successful
                 print(f"Error: {response.status_code}, {response.text}")
 
-    # now we have an array with all the articles
-    file = "new_nyt_data.csv"
-    fields = ["title", "year", "month", "url", "keyword"]
-    # write to the file
-    with open(file, 'w') as file:
-        csvWriter = csv.writer(file)        # helper for writing
-        csvWriter.writerow(fields)
-        csvWriter.writerows(articleArray)
-
-
-def insertArticlesIntoRawCSV(_unorderedMap, _orderedMap):
-    fileName = 'alt_data_DONTUSE.csv'  # name of file
-    articleList = []        # list of article objects
-
-    with open(fileName, 'r') as file:
-        csvReader = csv.reader(file)       # helper to read the csv file from the CSV package
-
-        # skip the header row       - format is "TITLE,YEAR,MONTH,KEYWORD"
-        next(csvReader, None)
-
-        for row in csvReader:
-            # Assuming a CSV with two columns, modify accordingly for more columns
-            title = row[0]
-            year = int(row[1])
-            month = int(row[2])
-            url = row[3]
-            keyword = row[4]        # just get the first keyword
-
-            # if (month == 2):
-            print("title = ", title, " | keyword = ", keyword, " | year = ", year, " | month = ", month)
-
-            # make a new article object
-            currentObj = Article(title, year, month, title, keyword)
-            # add it to the list
-            articleList.append(currentObj)
-
-        # insert all articles into the maps
-        for art in articleList:
-            _unorderedMap[art.keyword] = art     # put into map
-            # _orderedMap[art.keyword] = art       # put into map
+            return array
 
 
 def getArticlesFromMapsAndInsertToCSV(keyword, startYear, endYear, unorderedMap, orderedMap):
@@ -148,11 +124,7 @@ def getArticlesFromMapsAndInsertToCSV(keyword, startYear, endYear, unorderedMap,
         writer.writerows(formattedList)
 
 
-# getArticlesFromAPI(2000, 2001)
-
-# orderedMap = OrderedMap()               # empty ordered map
-# unorderedMap = unordered_map()          # empty unordered map
-# insertArticles(unorderedMap, orderedMap)
-#
-# for article in unorderedMap["Unites States Politics and Government"]:
-#     print(article.title, " -- ", article.year)
+if __name__ == "__main__":
+    arr = []            # initialize array
+    arr = getArticlesFromAPI(arr, 1852, 2022)       # get all the articles from the API
+    writeArticlesToRawCSV(arr)      # this creates (or overwrites) a new csv called "nyt_data.csv"
