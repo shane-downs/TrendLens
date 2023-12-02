@@ -13,19 +13,19 @@ app = Dash(__name__)
 
 # app layout
 app.layout = html.Div([
-    html.Div(children="The Next Facebook v6"),
+    html.Div(children="Homepage"),
     dcc.Input(id='start-year-input', type='number', placeholder='Start Year (1853-2023)', min=1853, max=2023),
     dcc.Input(id='end-year-input', type='number', placeholder='End Year (1853-2023)', min=1853, max=2023),
     dcc.Input(id='keyword-input', type='text', placeholder='Enter Keyword'),
-    html.Button('Submit', id='submit-val', n_clicks= 0),
+    html.Button('Submit', id='submit-val', n_clicks=0),
     dcc.Graph(id="line-plot")
 ])
 
-def update_graph(start_year, end_year, keyword):
 
+def update_graph(start_year, end_year, keyword):
     # scanning csv
     filtered_df = df[(df['Year'] >= start_year) & (df['Year'] <= end_year)]
-    
+
     # if keyword:
     #     filtered_df = filtered_df[filtered_df['Keyword'] == keyword]
 
@@ -33,6 +33,7 @@ def update_graph(start_year, end_year, keyword):
     fig.add_trace(px.line(filtered_df, x="Year", y="Usage").data[0])
 
     return fig
+
 
 @app.callback(
     Output("line-plot", "figure"),
@@ -49,8 +50,9 @@ def updateOutput(clicked, start_year, end_year, keyword):
         clicked = 0
         if start_year is None or end_year is None or start_year > end_year:
             return Dash.no_update
-        
+
         return update_graph(start_year, end_year, keyword)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
