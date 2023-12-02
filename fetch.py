@@ -6,7 +6,7 @@ from unordered_map import unordered_map
 
 
 class Article:
-    def __init__(self, title, year, month, url, keywords):
+    def __init__(self, title="", year="", month="", url="", keywords=""):
         self.title = title
         self.year = year
         self.month = month
