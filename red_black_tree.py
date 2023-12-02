@@ -87,8 +87,9 @@ class RedBlackTree:
                 break
         self.root.color = "B"
 
-    def insert_node(self, root, keyword, datetimes):
-        new_node = Node(keyword, datetimes)
+    def insert_node(self, root, keyword, article):
+        new_node = Node(keyword, article)
+        new_node.articles.append(article)
         self.node_count += 1
         if root is None:
             new_node.color = "B"
@@ -100,6 +101,9 @@ class RedBlackTree:
 
         while current is not None:
             parent = current
+            if keyword == current.keyword:
+                current.articles.append(article)
+                return
             if keyword < current.keyword:  # Traverse left subtree
                 current = current.left
             else:
@@ -129,7 +133,7 @@ class RedBlackTree:
                 print("\n")
                 current_lvl = height
 
-            print(current.datetimes, end=" ")
+            print(current.articles, end=" ")
 
             if current.left is not None:  # Traverse left subtree
                 node_queue.append(current.left)
@@ -156,7 +160,7 @@ class RedBlackTree:
     def inorder_traverse(self, root):
         if root is not None:  # LNR
             yield from self.inorder_traverse(root.left)  # Yield keyword used for iter over large datasets
-            yield root.keyword, root.datetimes
+            yield root.keyword, root.articles
             yield from self.inorder_traverse(root.right)
 
     def delete_node(self, root):
