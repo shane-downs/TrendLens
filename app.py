@@ -6,7 +6,7 @@ from ordered_map import OrderedMap
 from unordered_map import unordered_map
 
 # get data
-df = pd.read_csv("nyt_data.csv")
+df = pd.read_csv("alt_data_DONTUSE.csv")
 
 
 app = Dash(__name__)            # initialize app
