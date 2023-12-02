@@ -1,5 +1,6 @@
 import requests
 import csv
+import time
 from ordered_map import OrderedMap
 from unordered_map import unordered_map
 
@@ -13,7 +14,7 @@ class Article:
         self.keyword = keywords
 
 
-def getArticles(startYear, endYear):
+def getArticlesFromAPI(startYear, endYear):
     api_key = 'CqAGNdgXrh1N2aDKZhnF7tWLeAKrDYwj'
     articleArray = [["test1", "test1", "test1", "test1", "test1"]]
 
@@ -82,7 +83,7 @@ def getArticles(startYear, endYear):
         csvWriter.writerows(articleArray)
 
 
-def insertArticles(_unorderedMap, _orderedMap):
+def insertArticlesIntoRawCSV(_unorderedMap, _orderedMap):
     fileName = 'alt_data_DONTUSE.csv'  # name of file
     articleList = []        # list of article objects
 
@@ -114,12 +115,44 @@ def insertArticles(_unorderedMap, _orderedMap):
             # _orderedMap[art.keyword] = art       # put into map
 
 
-if __name__ == "__main__":
-    getArticles(2000, 2001)
+def getArticlesFromMapsAndInsertToCSV(keyword, startYear, endYear, unorderedMap, orderedMap):
+    # we need to track time so the following is time for unordered map
+    startTimeUnordered = time.time()
+    garbage = unorderedMap[keyword]       # get the data (should take a bit), but don't store it because we don't need two
+    endTimeUnordered = time.time()
+    UnorderedElapsed = endTimeUnordered - startTimeUnordered
 
-    # orderedMap = OrderedMap()               # empty ordered map
-    # unorderedMap = unordered_map()          # empty unordered map
-    # insertArticles(unorderedMap, orderedMap)
-    #
-    # for article in unorderedMap["Unites States Politics and Government"]:
-    #     print(article.title, " -- ", article.year)
+    # we need to track time so the following is time for ordered map
+    startTimeOrdered = time.time()
+    dataList = orderedMap[keyword]  # get the data (should take a bit)
+    endTimeOrdered = time.time()
+    OrderedElapsed = endTimeOrdered - startTimeOrdered
+
+    usageMap = {}                               # map to hold key of year and value of usages in that year
+    formattedList = [["Year", "Usage"]]
+
+    for i in range(len(dataList)):       # go through list to check article dates
+        if ((startYear <= dataList[i].year) and (endYear >= dataList[i].year)):   # if we are within the year range
+            usageMap[dataList[i].year] += 1      # increment the usage of the keyword at that year in the map
+        else:       # if we are not in the right range, continue
+            continue
+
+    # now we have a map of all the right usages, we need to put that into a list and then write that list to a new CSV
+    for pair in usageMap:
+        formattedList.append([pair.first, pair.second])     # add each piece of data to the new list
+
+    # now let's write to the CSV
+    filePath = 'formatted_nyt_data.csv'
+    with open(filePath, 'w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerows(formattedList)
+
+
+# getArticlesFromAPI(2000, 2001)
+
+# orderedMap = OrderedMap()               # empty ordered map
+# unorderedMap = unordered_map()          # empty unordered map
+# insertArticles(unorderedMap, orderedMap)
+#
+# for article in unorderedMap["Unites States Politics and Government"]:
+#     print(article.title, " -- ", article.year)
