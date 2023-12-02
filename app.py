@@ -1,5 +1,5 @@
 import csv
-from dash import Dash, html, dcc
+from dash import Dash, html, dcc, callback, Output, Input, State
 import pandas as pd
 import plotly.express as px
 import statsmodels.api as sm
@@ -9,34 +9,46 @@ from unordered_map import unordered_map
 # get data
 df = pd.read_csv("temp_data.csv")
 
+app = Dash(__name__)
 
-app = Dash(__name__)            # initialize app
 # app layout
-# variables
-# df = px.data.stocks(index=True, dateTimes=True)
-# fig = px.scatter(df, trendline="rolling", trendline_options=dict(window=5), title="Results for keyword")
-# fig.data = [t for t in fig.data if t.mode == "lines"]
-# fig.update_traces(showlegend=True)
-# fig.show()
-
 app.layout = html.Div([
-    html.Div(html.H1("TrendLens"), style={
-        'textAlign': 'center',
-        'color': 'blue'
-    }),
-    html.Div(children="The Next Facebook v4"),
-    # dcc.Graph(figure=fig)
-    dcc.Graph(
-        id="line-plot",
-        figure=px.scatter(df,
-                          x="Year",
-                          y="Usage",
-                          trendline_color_override="blue",
-                          title="keyword usage vs year"
-                          ).add_trace(px.line(df, x="Year", y="Usage").data[0])
-    )
+    html.Div(children="The Next Facebook v6"),
+    dcc.Input(id='start-year-input', type='number', placeholder='Start Year (1853-2023)', min=1853, max=2023),
+    dcc.Input(id='end-year-input', type='number', placeholder='End Year (1853-2023)', min=1853, max=2023),
+    dcc.Input(id='keyword-input', type='text', placeholder='Enter Keyword'),
+    html.Button('Submit', id='submit-val', n_clicks= 0),
+    dcc.Graph(id="line-plot")
 ])
 
-# running the app
+def update_graph(start_year, end_year, keyword):
+    filtered_df = df[(df['Year'] >= start_year) & (df['Year'] <= end_year)]
+    
+    # if keyword:
+    #     filtered_df = filtered_df[filtered_df['Keyword'] == keyword]
+
+    # Create a new plot with the filtered data
+    fig = px.scatter(filtered_df, x="Year", y="Usage", trendline_color_override="blue", title="keyword usage vs year")
+    fig.add_trace(px.line(filtered_df, x="Year", y="Usage").data[0])
+
+    return fig
+
+@app.callback(
+    Output("line-plot", "figure"),
+    [Input('submit-val', 'n_clicks')],
+    [Input('start-year-input', 'value'),
+     Input('end-year-input', 'value'),
+     Input('keyword-input', 'value')]
+)
+def handleSubmit(clicked, start_year, end_year, keyword):
+    if clicked == 0:
+        return Dash.no_update
+    else:
+        clicked = 0
+        if start_year is None or end_year is None or start_year > end_year:
+            return Dash.no_update
+        
+        return update_graph(start_year, end_year, keyword)
+
 if __name__ == "__main__":
     app.run(debug=True)
