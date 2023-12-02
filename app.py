@@ -15,7 +15,7 @@ class GraphData:
         pass
 
     def insert_all_unordered(self):
-
+        pass
 
 
 @app.route('/')

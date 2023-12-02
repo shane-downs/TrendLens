@@ -1,12 +1,16 @@
 import requests
+import csv
+from ordered_map import OrderedMap
+from unordered_map import unordered_map
+
 
 class Article:
-    def __init__(self, headline, year, month, url, keywords):
-        self.headline = headline
+    def __init__(self, title, year, month, url, keywords):
+        self.title = title
         self.year = year
         self.month = month
         self.url = url
-        self.keywords = keywords
+        self.keyword = keywords
 
 
 def getArticles(arr, startYear, endYear):
@@ -68,3 +72,34 @@ def getArticles(arr, startYear, endYear):
             return arr
 
 
+def insertArticles():
+    fileName = 'TrendLens/nyt_data.csv'     # name of file
+    articleList = []        # list of article objects
+    orderedMap = OrderedMap()               # empty ordered map
+    unorderedMap = unordered_map()          # empty unordered map
+
+    with open(fileName, 'r') as file:
+        csvReader = csv.reader(file)       # helper to read the csv file from the CSV package
+
+        # skip the header row       - format is "TITLE,YEAR,MONTH,KEYWORD"
+        next(csvReader, None)
+
+        for row in csvReader:
+            # Assuming a CSV with two columns, modify accordingly for more columns
+            title = row[0]
+            year = int(row[1])
+            month = int(row[2])
+            url = row[3]
+            keyword = row[4]        # just get the first keyword
+            # make a new article object
+            currentObj = Article(title, year, month, title, keyword)
+            # add it to the list
+            articleList.append(currentObj)
+
+        # insert all articles into the maps
+        for article in articleList:
+            unorderedMap[article.keyword] = article     # put into map
+            orderedMap[article.keyword] = article       # put into map
+
+        # now print the size of the maps
+        print(unorderedMap.GetSize())
