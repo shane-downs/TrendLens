@@ -1,5 +1,6 @@
 import requests
 
+
 class Article:
     def __init__(self, headline, year, month, url, keywords):
         self.headline = headline
@@ -9,7 +10,7 @@ class Article:
         self.keywords = keywords
 
 
-def getArticles(arr, startYear, endYear):
+def getArticles(arr, startYear, endYear):  # Returns arr of article objects
     api_key = 'CqAGNdgXrh1N2aDKZhnF7tWLeAKrDYwj'
 
     # iterating through entire new york times archive api
@@ -17,7 +18,6 @@ def getArticles(arr, startYear, endYear):
         for j in range(13):
             year = i
             month = j
-    
 
             url = f'https://api.nytimes.com/svc/archive/v1/{year}/{month}.json?api-key={api_key}'
 
@@ -36,7 +36,7 @@ def getArticles(arr, startYear, endYear):
                         # checking for publish dates aka checking if the month of articles is empty
                         if 'pub_date' not in article_data:
                             continue
-                        
+
                         # titles, url, time 
                         title = article_data['headline']['main']
                         url = article_data['web_url']
@@ -66,5 +66,3 @@ def getArticles(arr, startYear, endYear):
                 print(f"Error: {response.status_code}, {response.text}")
 
             return arr
-
-
