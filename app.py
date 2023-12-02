@@ -22,12 +22,13 @@ app.layout = html.Div([
 ])
 
 def update_graph(start_year, end_year, keyword):
+
+    # scanning csv
     filtered_df = df[(df['Year'] >= start_year) & (df['Year'] <= end_year)]
     
     # if keyword:
     #     filtered_df = filtered_df[filtered_df['Keyword'] == keyword]
 
-    # Create a new plot with the filtered data
     fig = px.scatter(filtered_df, x="Year", y="Usage", trendline_color_override="blue", title="keyword usage vs year")
     fig.add_trace(px.line(filtered_df, x="Year", y="Usage").data[0])
 
