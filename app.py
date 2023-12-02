@@ -5,6 +5,7 @@ from unordered_map import unordered_map
 app = Flask(__name__)
 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
 
+
 class GraphData:
     def __init__(self):
         self.ordered_map = OrderedMap()
@@ -12,6 +13,9 @@ class GraphData:
 
     def insert_all_ordered(self):
         pass
+
+    def insert_all_unordered(self):
+
 
 
 @app.route('/')

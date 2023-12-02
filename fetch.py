@@ -8,11 +8,12 @@ class Article:
         self.url = url
         self.keywords = keywords
 
-def getArticles(arr):
+
+def getArticles(arr, startYear, endYear):
     api_key = 'CqAGNdgXrh1N2aDKZhnF7tWLeAKrDYwj'
 
     # iterating through entire new york times archive api
-    for i in range(2019, 2020):
+    for i in range(startYear, endYear):
         for j in range(13):
             year = i
             month = j
@@ -28,7 +29,7 @@ def getArticles(arr):
                 # parsing json file
                 data = response.json()
 
-                # checking for repsonse and docs inside the data
+                # checking for response and docs inside the data
                 if 'response' in data and 'docs' in data['response']:
 
                     for article_data in data['response']['docs']:
