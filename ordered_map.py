@@ -7,6 +7,8 @@ class OrderedMap:
 
     def __setitem__(self, keyword, articles):
         res = self.rb_tree.search_red_black(self.rb_tree.root, keyword)
+        # if res == keyword:
+        # delete (not in final build because unnecessary
         self.rb_tree.insert_node(self.rb_tree.root, keyword, articles)
 
     def __getitem__(self, keyword):
