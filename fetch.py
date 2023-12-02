@@ -83,7 +83,7 @@ def getArticles(startYear, endYear):
 
 
 def insertArticles(_unorderedMap, _orderedMap):
-    fileName = 'nyt_data.csv'     # name of file
+    fileName = 'alt_data_DONTUSE.csv'  # name of file
     articleList = []        # list of article objects
 
     with open(fileName, 'r') as file:
