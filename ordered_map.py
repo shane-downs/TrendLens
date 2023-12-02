@@ -18,3 +18,6 @@ class OrderedMap:
 
     def __iter__(self):
         return self.rb_tree.inorder_traverse(self.rb_tree.root)
+
+    def get_item_count(self):
+        return self.rb_tree.node_count

@@ -11,6 +11,7 @@ class RedBlackTree:
 
     def __init__(self):
         self.root = None
+        self.node_count = 0
 
     def left_rotate(self, n):
         child = n.right
@@ -88,6 +89,7 @@ class RedBlackTree:
 
     def insert_node(self, root, keyword, datetimes):
         new_node = Node(keyword, datetimes)
+        self.node_count += 1
         if root is None:
             new_node.color = "B"
             self.root = new_node  # First node in the tree, create root
