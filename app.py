@@ -1,6 +1,7 @@
 from flask import Flask, jsonify
 from ordered_map import OrderedMap
 from unordered_map import unordered_map
+import fetch
 
 app = Flask(__name__)
 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
@@ -14,8 +15,9 @@ class GraphData:
     def insert_all_ordered(self):
         pass
 
-    def insert_all_unordered(self):
-
+    def insert_all_unordered(self, startYear, endYear):
+        pass
+        # print(fetch.getArticles(startYear, endYear))
 
 
 @app.route('/')
