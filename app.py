@@ -16,10 +16,17 @@ app.layout = html.Div([
     html.Div(children="The Next Facebook v6"),
     dcc.Input(id='start-year-input', type='number', placeholder='Start Year (1853-2023)', min=1853, max=2023),
     dcc.Input(id='end-year-input', type='number', placeholder='End Year (1853-2023)', min=1853, max=2023),
-    dcc.Input(id='keyword-input', type='text', placeholder='Enter Keyword'),
-    html.Button('Submit', id='submit-val', n_clicks= 0),
-    dcc.Graph(id="line-plot")
+    dcc.Input(id='keyword-input', type='text', placeholder='Enter Keyword', style={'width': '200px'}),
+    html.Button('Submit', id='submit-val', n_clicks=0),
+    # html div for the randomize button below keyword input
+    html.Div([
+        html.Button('Randomize Keyword', id='randomize-keyword', n_clicks=0,
+                    style={'width': '208px', 'marginLeft': '339px'})
+    ]),
+    dcc.Graph(id="line-plot"),
+    html.Div(id='output-div')
 ])
+
 
 def update_graph(start_year, end_year, keyword):
 
