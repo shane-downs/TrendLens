@@ -108,23 +108,26 @@ def getArticlesFromMapsAndInsertToCSV(keyword, startYear, endYear, unorderedMap,
     formattedList = [["Year", "Usage"]]
 
     for i in range(len(dataList)):       # go through list to check article dates
-        if ((startYear <= dataList[i].year) and (endYear >= dataList[i].year)):   # if we are within the year range
-            usageMap[dataList[i].year] += 1      # increment the usage of the keyword at that year in the map
+        if ((startYear <= int(dataList[i].year)) and (endYear >= int(dataList[i].year))):   # if we are within the year range
+            if dataList[i].year not in usageMap:
+                usageMap[dataList[i].year] = 1
+            else:
+                usageMap[dataList[i].year] += 1     # increment the usage of the keyword at that year in the map
         else:       # if we are not in the right range, continue
             continue
 
     # now we have a map of all the right usages, we need to put that into a list and then write that list to a new CSV
-    for pair in usageMap:
-        formattedList.append([pair.first, pair.second])     # add each piece of data to the new list
+    formattedList = [[year, count] for year, count in usageMap.items()]   # add each piece of data to the new list
 
     # now let's write to the CSV
     filePath = 'formatted_nyt_data.csv'
+    formatColums = ["Year", "Usage"]
+
     with open(filePath, 'w', newline='') as file:
         writer = csv.writer(file)
+        writer.writerow(formatColums)
         writer.writerows(formattedList)
 
 
 if __name__ == "__main__":
-    arr = []            # initialize array
-    arr = getArticlesFromAPI(arr, 1852, 2022)       # get all the articles from the API
-    writeArticlesToRawCSV(arr)      # this creates (or overwrites) a new csv called "nyt_data.csv"
+    orderd = OrderedMap
