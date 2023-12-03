@@ -77,11 +77,9 @@ def handleSubmit(submit_val_clicks, start_year, end_year, keyword):
             return no_update
         else:   # if all is good
             if (len(nyt_unordered_map[keyword]) > 0):       # if the keyword exists
-                print("collecting data!")
                 getArticlesFromMapsAndInsertToCSV(keyword, start_year, end_year, nyt_unordered_map, nyt_ordered_map)
                 return update_graph(start_year, end_year, keyword)       # update graph
             else:       # if it is length 0, the keyword doesn't exist
-                print("empty  :(")
                 return no_update
     else:
         return no_update
