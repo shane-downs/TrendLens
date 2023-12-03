@@ -220,7 +220,6 @@ if __name__ == "__main__":
 
     # get articles from csv file
     articles_list = read_csv_to_list()
-<<<<<<< Updated upstream
     # get information for ordered map
     orderedResult = create_ordered_map(articles_list)
     nyt_ordered_map = orderedResult[0]      # returns a tuple, so item 0 is the map
@@ -232,10 +231,7 @@ if __name__ == "__main__":
 
     # now run the app
     app.run(debug=True)
-=======
     nyt_ordered_map = create_ordered_map(articles_list)
     nyt_unordered_map = create_unordered_map(articles_list)
     suggestions = create_map_of_keywords()
     app.run(debug=True)
-    
->>>>>>> Stashed changes
