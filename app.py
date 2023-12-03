@@ -1,13 +1,13 @@
 import csv
-from dash import Dash, html, dcc, callback, Output, Input, State
+import random
+
+from dash import Dash, html, dcc, callback, Output, Input, State, no_update
 import pandas as pd
 import plotly.express as px
 import statsmodels.api as sm
-from ordered_map import OrderedMap
-from unordered_map import unordered_map
+from create_maps import *
+from fetch import getArticlesFromMapsAndInsertToCSV
 
-# get data
-df = pd.read_csv("temp_data.csv")
 
 app = Dash(__name__)
 
@@ -48,12 +48,11 @@ app.layout = html.Div([
 ])
 
 
-def update_graph(start_year, end_year, keyword):
+def update_graph(start_year, end_year):
+    df = pd.read_csv("formatted_nyt_data.csv")
+
     # scanning csv
     filtered_df = df[(df['Year'] >= start_year) & (df['Year'] <= end_year)]
-
-    # if keyword:
-    #     filtered_df = filtered_df[filtered_df['Keyword'] == keyword]
 
     fig = px.scatter(filtered_df, x="Year", y="Usage", trendline_color_override="blue", title="keyword usage vs year")
     fig.add_trace(px.line(filtered_df, x="Year", y="Usage").data[0])
@@ -63,20 +62,51 @@ def update_graph(start_year, end_year, keyword):
 
 @app.callback(
     Output("line-plot", "figure"),
-    [Input('submit-val', 'n_clicks')],
-    [Input('start-year-input', 'value'),
-     Input('end-year-input', 'value'),
-     Input('keyword-input', 'value')]
+    [
+        Input('submit-val', 'n_clicks'),
+        Input('randomize-val', 'n_clicks')
+    ],
+    [
+        State('start-year-input', 'value'),
+        State('end-year-input', 'value'),
+        State('keyword-input', 'value')
+    ]
 )
-def updateOutput(n_clicks, start_year, end_year, keyword):
-    if n_clicks == 0:
-        return Dash.no_update
+def handleChange(submit_val_clicks, randomize_val_clicks, start_year, end_year, keyword):
+    if submit_val_clicks > 0:       # if they clicked submit
+        if (start_year is None) or (end_year is None) or (start_year > end_year) or (keyword is None):      # if something is wrong
+            return no_update
+        else:   # if all is good
+            if (len(nyt_unordered_map[keyword]) > 0):       # if the keyword exists
+                getArticlesFromMapsAndInsertToCSV(keyword, start_year, end_year, nyt_unordered_map, nyt_ordered_map)
+                return update_graph(start_year, end_year)       # update graph
+            else:       # if it is length 0, the keyword doesn't exist
+                return no_update
+    elif randomize_val_clicks > 0:      # if they click the randomize button
+        randomInput = randomizeInput()
+        getArticlesFromMapsAndInsertToCSV(randomInput[0], randomInput[1], randomInput[2], nyt_unordered_map, nyt_ordered_map)
+        return update_graph(randomInput[1], randomInput[2])  # update graph
     else:
-        if start_year is None or end_year is None or start_year > end_year:
-            return Dash.no_update
+        return no_update
 
-        return update_graph(start_year, end_year, keyword)
+
+def randomizeInput():
+    result = [nyt_unordered_map.GetRandomKeyword()]     # add random keyword as first thing in list
+    while True:
+        startYear = random.randint(1862, 2022)
+        endYear = random.randint(1862, 2022)
+        if (startYear < (endYear - 10)):
+            result.append(startYear)
+            result.append(endYear)
+            return result
+        else:
+            continue
 
 
 if __name__ == "__main__":
+    articles_list = read_csv_to_list()
+    nyt_ordered_map = create_ordered_map(articles_list)
+    nyt_unordered_map = create_unordered_map(articles_list)
     app.run(debug=True)
+
+
