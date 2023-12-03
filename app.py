@@ -1,4 +1,6 @@
 import csv
+import random
+
 from dash import Dash, html, dcc, callback, Output, Input, State, no_update
 import pandas as pd
 import plotly.express as px
@@ -50,17 +52,35 @@ def update_graph(start_year, end_year):
         State('keyword-input', 'value')
     ]
 )
-def handleSubmit(submit_val_clicks, randomize_val_clicks, start_year, end_year, keyword):
+def handleChange(submit_val_clicks, randomize_val_clicks, start_year, end_year, keyword):
     if submit_val_clicks > 0:       # if they clicked submit
-        if (start_year is None) or (end_year is None) or (start_year > end_year) or (keyword is None):
+        if (start_year is None) or (end_year is None) or (start_year > end_year) or (keyword is None):      # if something is wrong
             return no_update
-        else:
-            getArticlesFromMapsAndInsertToCSV(keyword, start_year,end_year, nyt_unordered_map, nyt_ordered_map)
-            return update_graph(start_year, end_year)
-    elif randomize_val_clicks > 0:
-        print("rando")
+        else:   # if all is good
+            if (len(nyt_unordered_map[keyword]) > 0):       # if the keyword exists
+                getArticlesFromMapsAndInsertToCSV(keyword, start_year, end_year, nyt_unordered_map, nyt_ordered_map)
+                return update_graph(start_year, end_year)       # update graph
+            else:       # if it is length 0, the keyword doesn't exist
+                return no_update
+    elif randomize_val_clicks > 0:      # if they click the randomize button
+        randomInput = randomizeInput()
+        getArticlesFromMapsAndInsertToCSV(randomInput[0], randomInput[1], randomInput[2], nyt_unordered_map, nyt_ordered_map)
+        return update_graph(randomInput[1], randomInput[2])  # update graph
     else:
         return no_update
+
+
+def randomizeInput():
+    result = [nyt_unordered_map.GetRandomKeyword()]     # add random keyword as first thing in list
+    while True:
+        startYear = random.randint(1862, 2022)
+        endYear = random.randint(1862, 2022)
+        if (startYear < (endYear - 10)):
+            result.append(startYear)
+            result.append(endYear)
+            return result
+        else:
+            continue
 
 
 if __name__ == "__main__":

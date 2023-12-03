@@ -1,14 +1,23 @@
 from Article import *
+import random
 
 
 class HashTable:        # hash table where each index is a list. Each list holds article of a similar keyword. Quadratic Probing
     def __init__(self):
         self.LOAD_FACTOR = 0.7       # load factor is 0.6
         self.tableSize = 10         # initiate table size to 10
-        self.buckets = 0           # number of items is 0 until we insert something
+        self.numItems = 0           # number of items is 0 until we insert something
         self.table = []      # table to hold the actual information
         for item in range(10):      # add 10 empty lists to the table
             self.table.append([])
+
+    def FetchRandomKeyword(self):
+        while True:
+            randomIndex = random.randint(0, self.numItems)
+            if (len(self.table[randomIndex]) > 0):
+                return self.table[randomIndex][0].keyword
+            else:
+                continue
 
     def Hash(self, article):        # returns an integer that is the hashed value derived from the article keyword
         # first let's convert the article to lowercase so that our keywords aren't case-sensitive
@@ -44,8 +53,8 @@ class HashTable:        # hash table where each index is a list. Each list holds
                     continue        # we continue in the for loop (this conditional isn't necessary but helps readability)
 
         # now, increment table variables and check load factor
-        self.buckets += 1      # increment the number of total articles
-        if ((self.buckets / self.tableSize) >= self.LOAD_FACTOR):   # if  we are at/over load factor, we need to resize and rehash all sub-lists
+        self.numItems += 1      # increment the number of total articles
+        if ((self.numItems / self.tableSize) >= self.LOAD_FACTOR):   # if  we are at/over load factor, we need to resize and rehash all sub-lists
             self.tableSize *= 2     # double the size of our table
             newTable = []       # new table which will replace the current table
             for i in range(self.tableSize):     # add a sub-list for every possible spot in the table
