@@ -36,32 +36,23 @@ def read_csv_to_list():  # Returns list of article objects found in csv (~900,00
 
 
 def create_ordered_map(art_list):
-    startTimeOrdered = time.time()      # start the timer
-
     # do insertion
     ordered_map = OrderedMap()
     for i in range(len(art_list)):
         ordered_map[art_list[i].keyword] = art_list[i]
 
-    endTimeOrdered = time.time()      # end the timer
-    orderedElapsed = endTimeOrdered - startTimeOrdered        # calculate time elapsed
-    print("ordered time: ", orderedElapsed)
-
-    return (ordered_map, orderedElapsed)
+    return ordered_map
 
 
 def create_unordered_map(art_list):
-    startTimeUnordered = time.time()
 
     # do insertion
     unorderedMap = unordered_map()
     for i in range(len(art_list)):
         unorderedMap[art_list[i].keyword] = art_list[i]
 
-    endTimeUnordered = time.time()
-    unorderedElapsed = endTimeUnordered - startTimeUnordered  # Delta t
-    print("unordered time: ", unorderedElapsed)
-    return (unorderedMap, unorderedElapsed)
+    return unorderedMap
+
 
 def create_map_of_keywords():
     csvfile = open('nyt_data.csv', newline='', encoding='utf-8', errors='replace')
@@ -81,11 +72,7 @@ def create_map_of_keywords():
 if __name__ == "__main__":
     articles_list = read_csv_to_list()
     # get information for ordered map
-    orderedResult = create_ordered_map(articles_list)
-    nyt_ordered_map = orderedResult[0]      # returns a tuple, so item 0 is the map
-    orderedRuntime = orderedResult[1]       # item 1 is the time taken to insert the items
+    nyt_ordered_map = create_ordered_map(articles_list)
     # get information for unordered map
-    unorderedResult = create_unordered_map(articles_list)
-    nyt_unordered_map = unorderedResult[0]      # item 0 is the map
-    unorderedRuntime = unorderedResult[1]       # item 1 is the runtime to do all the insertion
+    nyt_unordered_map = create_unordered_map(articles_list)
     getArticlesFromMapsAndInsertToCSV("Movies", 2000, 2019, nyt_unordered_map, nyt_ordered_map)

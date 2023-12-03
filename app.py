@@ -89,8 +89,8 @@ def update_graph(start_year, end_year, _keyword):
 
     # gets retrieval time from file and adds it to time taken to insert for the result "total runtime"
     elapsed_times = first_line.values.flatten()
-    subtitle = "Total Unordered Map Runtime: {} vs Total Ordered Map Runtime: {}".format(
-        (elapsed_times[0] + unorderedRuntime), (elapsed_times[1] + orderedRuntime))
+    subtitle = "Unordered Map Runtime: {} vs Ordered Map Runtime: {}".format(
+        (elapsed_times[0]), (elapsed_times[1]))
 
     df = pd.read_csv("formatted_nyt_data.csv", skiprows=1)
     # scanning csv
@@ -214,24 +214,11 @@ def randomizeInput():
 
 
 if __name__ == "__main__":
-    # articles_list = read_csv_to_list()
-    # nyt_ordered_map = create_ordered_map(articles_list)
-    # nyt_unordered_map = create_unordered_map(articles_list)
-
     # get articles from csv file
     articles_list = read_csv_to_list()
-    # get information for ordered map
-    orderedResult = create_ordered_map(articles_list)
-    nyt_ordered_map = orderedResult[0]      # returns a tuple, so item 0 is the map
-    orderedRuntime = orderedResult[1]       # item 1 is the time taken to insert the items
-    # get information for unordered map
-    unorderedResult = create_unordered_map(articles_list)
-    nyt_unordered_map = unorderedResult[0]      # item 0 is the map
-    unorderedRuntime = unorderedResult[1]       # item 1 is the runtime to do all the insertion
-
-    # now run the app
-    app.run(debug=True)
+    # make maps
     nyt_ordered_map = create_ordered_map(articles_list)
     nyt_unordered_map = create_unordered_map(articles_list)
+    # make list of suggestions
     suggestions = create_map_of_keywords()
     app.run(debug=True)
