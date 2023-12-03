@@ -103,6 +103,7 @@ def getArticlesFromMapsAndInsertToCSV(keyword, startYear, endYear, unorderedMap,
     dataList = orderedMap[keyword]  # get the data (should take a bit)
     endTimeOrdered = timer()
     OrderedElapsed = endTimeOrdered - startTimeOrdered
+
     usageMap = {}                               # map to hold key of year and value of usages in that year
 
     for i in range(len(dataList)):       # go through list to check article dates

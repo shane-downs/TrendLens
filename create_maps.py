@@ -2,6 +2,8 @@ from ordered_map import OrderedMap
 from unordered_map import unordered_map
 import csv
 from fetch import Article, getArticlesFromMapsAndInsertToCSV
+from timeit import default_timer as timer
+import time
 
 
 def read_csv_to_list():  # Returns list of article objects found in csv (~900,000 data points/articles in csv)
@@ -33,26 +35,57 @@ def read_csv_to_list():  # Returns list of article objects found in csv (~900,00
     return articles_list
 
 
-def create_ordered_map(articles_list):
-    nyt_ordered_map = OrderedMap()
+def create_ordered_map(art_list):
+    startTimeOrdered = time.time()      # start the timer
 
-    for i in range(len(articles_list)):
-        nyt_ordered_map[articles_list[i].keyword] = articles_list[i]
+    # do insertion
+    ordered_map = OrderedMap()
+    for i in range(len(art_list)):
+        ordered_map[art_list[i].keyword] = art_list[i]
 
-    return nyt_ordered_map
+    endTimeOrdered = time.time()      # end the timer
+    orderedElapsed = endTimeOrdered - startTimeOrdered        # calculate time elapsed
+    print("ordered time: ", orderedElapsed)
+
+    return (ordered_map, orderedElapsed)
 
 
-def create_unordered_map(articles_list):
-    nyt_unordered_map = unordered_map()
+def create_unordered_map(art_list):
+    startTimeUnordered = time.time()
 
-    for i in range(len(articles_list)):
-        nyt_unordered_map[articles_list[i].keyword] = articles_list[i]
+    # do insertion
+    unorderedMap = unordered_map()
+    for i in range(len(art_list)):
+        unorderedMap[art_list[i].keyword] = art_list[i]
 
-    return nyt_unordered_map
+    endTimeUnordered = time.time()
+    unorderedElapsed = endTimeUnordered - startTimeUnordered  # Delta t
+    print("unordered time: ", unorderedElapsed)
+    return (unorderedMap, unorderedElapsed)
+
+def create_map_of_keywords():
+    csvfile = open('nyt_data.csv', newline='', encoding='utf-8', errors='replace')
+    c = csv.reader(csvfile)
+    suggestions_set = set()
+    suggestions = []
+    for row in c:
+        word = row[4].split(',')
+        first_word = word[0].strip()
+        suggestions_set.add(first_word)
+
+    for elem in suggestions_set: 
+        suggestions.append(elem)
+    return suggestions
 
 
 if __name__ == "__main__":
     articles_list = read_csv_to_list()
-    nyt_ordered_map = create_ordered_map(articles_list)
-    nyt_unordered_map = create_unordered_map(articles_list)
+    # get information for ordered map
+    orderedResult = create_ordered_map(articles_list)
+    nyt_ordered_map = orderedResult[0]      # returns a tuple, so item 0 is the map
+    orderedRuntime = orderedResult[1]       # item 1 is the time taken to insert the items
+    # get information for unordered map
+    unorderedResult = create_unordered_map(articles_list)
+    nyt_unordered_map = unorderedResult[0]      # item 0 is the map
+    unorderedRuntime = unorderedResult[1]       # item 1 is the runtime to do all the insertion
     getArticlesFromMapsAndInsertToCSV("Movies", 2000, 2019, nyt_unordered_map, nyt_ordered_map)
