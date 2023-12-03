@@ -1,5 +1,5 @@
 import csv
-from dash import Dash, html, dcc, callback, Output, Input, State
+from dash import Dash, html, dcc, callback, Output, Input, State, no_update
 import pandas as pd
 import plotly.express as px
 import statsmodels.api as sm
@@ -20,7 +20,7 @@ app.layout = html.Div([
     html.Button('Submit', id='submit-val', n_clicks=0),
     # html div for the randomize button below keyword input
     html.Div([
-        html.Button('Randomize Keyword', id='randomize-keyword', n_clicks=0,
+        html.Button('Randomize Keyword', id='randomize-val', n_clicks=0,
                     style={'width': '208px', 'marginLeft': '339px'})
     ]),
     dcc.Graph(id="line-plot"),
@@ -41,22 +41,28 @@ def update_graph(start_year, end_year, keyword):
 
     return fig
 
+
 @app.callback(
     Output("line-plot", "figure"),
-    [Input('submit-val', 'n_clicks')],
-    [Input('start-year-input', 'value'),
-     Input('end-year-input', 'value'),
-     Input('keyword-input', 'value')]
+    [
+        Input('submit-val', 'n_clicks'),
+        Input('randomize-val', 'n_clicks')],
+    [
+        State('start-year-input', 'value'),
+        State('end-year-input', 'value'),
+        State('keyword-input', 'value')]
 )
-def handleSubmit(clicked, start_year, end_year, keyword):
-    if clicked == 0:
-        return Dash.no_update
+def handleSubmit(submit_val_clicks, randomize_val_clicks, start_year, end_year, keyword):
+    if randomize_val_clicks > 0:
+        print("randomize")
+    elif submit_val_clicks > 0:
+        if (start_year is None) or (end_year is None) or (start_year > end_year) or (keyword is None):
+            return no_update
+        else:
+            return update_graph(start_year, end_year, keyword)
     else:
-        clicked = 0
-        if start_year is None or end_year is None or start_year > end_year:
-            return Dash.no_update
-        
-        return update_graph(start_year, end_year, keyword)
+        return no_update
+
 
 if __name__ == "__main__":
     app.run(debug=True)
