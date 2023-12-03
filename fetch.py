@@ -1,6 +1,6 @@
 import requests
 import csv
-import time
+from timeit import default_timer as timer
 from ordered_map import OrderedMap
 from unordered_map import unordered_map
 
@@ -93,19 +93,17 @@ def getArticlesFromAPI(array, startYear, endYear):     # never used again since 
 
 def getArticlesFromMapsAndInsertToCSV(keyword, startYear, endYear, unorderedMap, orderedMap):
     # we need to track time so the following is time for unordered map
-    startTimeUnordered = time.time()
+    startTimeUnordered = timer()
     garbage = unorderedMap[keyword]       # get the data (should take a bit), but don't store it because we don't need two
-    endTimeUnordered = time.time()
+    endTimeUnordered = timer()
     UnorderedElapsed = endTimeUnordered - startTimeUnordered
 
     # we need to track time so the following is time for ordered map
-    startTimeOrdered = time.time()
+    startTimeOrdered = timer()
     dataList = orderedMap[keyword]  # get the data (should take a bit)
-    endTimeOrdered = time.time()
+    endTimeOrdered = timer()
     OrderedElapsed = endTimeOrdered - startTimeOrdered
-
     usageMap = {}                               # map to hold key of year and value of usages in that year
-    formattedList = [["Year", "Usage"]]
 
     for i in range(len(dataList)):       # go through list to check article dates
         if ((startYear <= int(dataList[i].year)) and (endYear >= int(dataList[i].year))):   # if we are within the year range
@@ -118,12 +116,13 @@ def getArticlesFromMapsAndInsertToCSV(keyword, startYear, endYear, unorderedMap,
 
     # now we have a map of all the right usages, we need to put that into a list and then write that list to a new CSV
     formattedList = [[year, count] for year, count in usageMap.items()]   # add each piece of data to the new list
-
     # now let's write to the CSV
     filePath = 'formatted_nyt_data.csv'
     formatColumns = ["Year", "Usage"]
+    formattedRunTimes = [round(UnorderedElapsed, 11), round(OrderedElapsed, 11)]
 
     with open(filePath, 'w', newline='') as file:
         writer = csv.writer(file)
+        writer.writerow(formattedRunTimes)
         writer.writerow(formatColumns)
         writer.writerows(formattedList)

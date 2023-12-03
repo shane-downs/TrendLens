@@ -11,11 +11,11 @@ class HashTable:        # hash table where each index is a list. Each list holds
         for item in range(10):      # add 10 empty lists to the table
             self.table.append([])
 
-    def FetchRandomKeyword(self):
+    def FetchRandomSubList(self):
         while True:
             randomIndex = random.randint(0, self.numItems)
             if (len(self.table[randomIndex]) > 0):
-                return self.table[randomIndex][0].keyword
+                return self.table[randomIndex]
             else:
                 continue
 
