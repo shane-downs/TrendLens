@@ -26,15 +26,12 @@ app.layout = html.Div([
                 className="Graph",
                 children=[
                     dcc.Input(id='start-year-input', type='number', placeholder='Start Year (1853-2023)', min=1853,
-                              max=2023),
+                              max=2023, style={'width': '200px', 'height': '40px'}),
                     dcc.Input(id='end-year-input', type='number', placeholder='End Year (1853-2023)', min=1853,
-                              max=2023),
-                    dcc.Input(id='keyword-input', type='text', placeholder='Enter Keyword', style={'width': '200px'}),
-                    html.Button('Submit', id='submit-val', n_clicks=0),
-                    html.Div([
-                        html.Button('Randomize Keyword', id='randomize-val', n_clicks=0,
-                                    style={'width': '208px', 'marginLeft': '339px'})
-                    ]),
+                              max=2023, style={'width': '200px', 'height': '40px'}),
+                    dcc.Input(id='keyword-input', type='text', placeholder='Enter Keyword', style={'width': '300px', 'height': '40px'}),
+                    html.Button('Submit', id='submit-val', n_clicks=0, style={'width': '200px', 'height': '40px'}),
+                    html.Button('Randomize Entry', id='randomize-val', n_clicks=0, style={'width': '200px', 'height': '40px'}),
                     dcc.Graph(id="line-plot"),
                 ]),
 
@@ -44,12 +41,11 @@ app.layout = html.Div([
                      ])
         ]
     ),
-    # html div for the randomize button below keyword input
 ])
 
 
 def update_graph(start_year, end_year, _keyword):
-    titleString = _keyword + " Usage Between " + str(start_year) + " and " + str(end_year)
+    titleString = "\'" + _keyword + "\'" + " Usage Between " + str(start_year) + " and " + str(end_year)
     df = pd.read_csv("formatted_nyt_data.csv")
 
     # scanning csv
@@ -105,16 +101,29 @@ def handleRandomize(randomize_val_clicks, start_year, end_year, keyword):
 
 
 def randomizeInput():
-    result = [nyt_unordered_map.GetRandomKeyword()]     # add random keyword as first thing in list
+    result = []     # result to return later
+    subList = []
+    # loop to get random keyword
     while True:
-        startYear = random.randint(1862, 2022)
-        endYear = random.randint(1862, 2022)
-        if (startYear < (endYear - 10)):
-            result.append(startYear)
-            result.append(endYear)
-            return result
+        currSubList = nyt_unordered_map.GetRandomKeyword()      # get the random sub list
+        if (len(currSubList) >= 10):        # the list has over 10 years of data points
+            result.append(currSubList[0].keyword)       # add the keyword to result
+            subList = currSubList
+            break
         else:
             continue
+    # get max and min year from data
+    minYr = 2022
+    maxYr = 1862
+    for data in subList:
+        if (int(data.year) < minYr):       # if current year is less than current minimum year
+            minYr = int(data.year)
+        elif (int(data.year) > maxYr):     # if current year is greater than maximum year
+            maxYr = int(data.year)
+    # now we have the max and minimum year, add to list and return
+    result.append(minYr)
+    result.append(maxYr)
+    return result       # and return result
 
 
 if __name__ == "__main__":

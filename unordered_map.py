@@ -20,7 +20,7 @@ class unordered_map:        # map backed up by hash table. Key is a keyword, val
         return self.size
 
     def GetRandomKeyword(self):
-        return self.map.FetchRandomKeyword()
+        return self.map.FetchRandomSubList()
 
     def __getitem__(self, key):        # this overloads the [ ] operator when used to access (on right hand side)
         return self.map.Access(key)         # return the list of items that have the requested keyword
