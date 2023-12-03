@@ -13,18 +13,37 @@ app = Dash(__name__)
 
 # app layout
 app.layout = html.Div([
+    html.Link(rel="stylesheet", href="style.css"),
     html.Div(
-        className="Graph",
+        className="homepage",
         children=[
-            dcc.Input(id='start-year-input', type='number', placeholder='Start Year (1853-2023)', min=1853, max=2023),
-            dcc.Input(id='end-year-input', type='number', placeholder='End Year (1853-2023)', min=1853, max=2023),
-            dcc.Input(id='keyword-input', type='text', placeholder='Enter Keyword', style={'width': '200px'}),
-            html.Button('Submit', id='submit-val', n_clicks=0),
-            html.Div([
-                html.Button('Randomize Keyword', id='randomize-keyword', n_clicks=0, style={'width': '208px', 'marginLeft': '339px'})
-            ]),
-            dcc.Graph(id="line-plot"),
-        ]),
+            html.Div(className="text-box",
+                     children=[
+                         html.H1("Your Personal Tool for Analyzing Trends in the News"),
+                     ]),
+
+            html.Div(
+                className="Graph",
+                children=[
+                    dcc.Input(id='start-year-input', type='number', placeholder='Start Year (1853-2023)', min=1853,
+                              max=2023),
+                    dcc.Input(id='end-year-input', type='number', placeholder='End Year (1853-2023)', min=1853,
+                              max=2023),
+                    dcc.Input(id='keyword-input', type='text', placeholder='Enter Keyword', style={'width': '200px'}),
+                    html.Button('Submit', id='submit-val', n_clicks=0),
+                    html.Div([
+                        html.Button('Randomize Keyword', id='randomize-keyword', n_clicks=0,
+                                    style={'width': '208px', 'marginLeft': '339px'})
+                    ]),
+                    dcc.Graph(id="line-plot"),
+                ]),
+
+            html.Div(className="side-nav",
+                     children=[
+                         html.Img(src="assets/logo.png", className="logo")
+                     ])
+        ]
+    ),
     # html div for the randomize button below keyword input
 ])
 
