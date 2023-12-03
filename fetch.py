@@ -121,13 +121,9 @@ def getArticlesFromMapsAndInsertToCSV(keyword, startYear, endYear, unorderedMap,
 
     # now let's write to the CSV
     filePath = 'formatted_nyt_data.csv'
-    formatColums = ["Year", "Usage"]
+    formatColumns = ["Year", "Usage"]
 
     with open(filePath, 'w', newline='') as file:
         writer = csv.writer(file)
-        writer.writerow(formatColums)
+        writer.writerow(formatColumns)
         writer.writerows(formattedList)
-
-
-if __name__ == "__main__":
-    orderd = OrderedMap

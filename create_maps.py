@@ -3,8 +3,8 @@ from unordered_map import unordered_map
 import csv
 from fetch import Article, getArticlesFromMapsAndInsertToCSV
 
-def read_csv_to_list():  # Returns list of article objects found in csv (~900,000 data points/articles in csv)
 
+def read_csv_to_list():  # Returns list of article objects found in csv (~900,000 data points/articles in csv)
     csvfile = open('nyt_data.csv', newline='', encoding='utf-8', errors='replace')
 
     c = csv.reader(csvfile)
