@@ -174,5 +174,3 @@ if __name__ == "__main__":
     nyt_ordered_map = create_ordered_map(articles_list)
     nyt_unordered_map = create_unordered_map(articles_list)
     app.run(debug=True)
-
-
