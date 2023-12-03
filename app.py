@@ -13,7 +13,10 @@ app = Dash(__name__)
 
 # app layout
 app.layout = html.Div([
+    html.Meta(charSet="UTF-8"),
+    html.Meta(name="viewport", content="width=device-width, initial-scale=1.0"),
     html.Link(rel="stylesheet", href="style.css"),
+    html.Link(rel="stylesheet", href="https://fonts.googleapis.com/css2?family=Lato&display=swap"),
     html.Div(
         className="homepage",
         children=[
@@ -100,7 +103,11 @@ def update_graph(start_year, end_year, _keyword):
                 y=1.15,
                 text=subtitle,
                 showarrow=False,
-                font=dict(size=12)
+                font=dict(
+                    family='Arial, sans-serif',
+                    size=14,
+                    color='black'
+                ),
             )
         ]
     )

@@ -3,7 +3,7 @@ from collections import deque
 
 '''
 Code snippets from Shane Downs Gator AVL project 1 submission
-red black tree algorithm advice from Programiz
+red black tree insertion rebalance algorithm advice from Programiz
 '''
 
 
@@ -176,7 +176,7 @@ class RedBlackTree:
             else:
                 current = current.right
 
-    def delete_helper(self, node):
+    def delete_helper(self, node):   # Not used in final build. commented out code below was my first attempt
         if node is None:
             return
 
@@ -286,7 +286,7 @@ class RedBlackTree:
             a.parent.right = b
         b.parent = a.parent
 
-    def fix_rb_delete(self, node_to_del):
+    def fix_rb_delete(self, node_to_del):  # Rebalance after delete
         parent = node_to_del.parent
 
         while not node_to_del == self.root and node_to_del.color == "B":

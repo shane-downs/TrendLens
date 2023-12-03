@@ -1,7 +1,7 @@
 *{
     margin: 0;
     padding: 0;
-    font-family: "Garamond", sans-serif;
+    font-family: 'Lato', sans-serif;
     box-sizing: border-box;
 }
 
@@ -16,7 +16,7 @@
 }
 
 .text-box h3{
-    font-family: "Garamond", sans-serif;
+    font-family: 'Lato', sans-serif;
     margin-top: 10px;
 }
 
@@ -72,7 +72,7 @@
 }
 
 .input-field {
-    font-family: Garamond, sans-serif;
+    font-family: 'Lato', sans-serif;
     font-weight: bold;
     width: 15%;
     resize: vertical;
@@ -85,7 +85,7 @@
 }
 
 .submit-button {
-    font-family: Garamond, sans-serif;
+    font-family: 'Lato', sans-serif;
     font-weight: bold;
     padding: 12px 24px;
     background-color: grey;
@@ -98,7 +98,7 @@
 }
 
 .random-button {
-    font-family: Garamond, sans-serif;
+    font-family: 'Lato', sans-serif;
     font-weight: bold;
     padding: 12px 24px;
     background-color: grey;

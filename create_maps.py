@@ -3,6 +3,7 @@ from unordered_map import unordered_map
 import csv
 from fetch import Article, getArticlesFromMapsAndInsertToCSV
 from timeit import default_timer as timer
+import time
 
 
 def read_csv_to_list():  # Returns list of article objects found in csv (~900,000 data points/articles in csv)
@@ -35,14 +36,14 @@ def read_csv_to_list():  # Returns list of article objects found in csv (~900,00
 
 
 def create_ordered_map(art_list):
-    startTimeOrdered = timer()      # start the timer
+    startTimeOrdered = time.time()      # start the timer
 
     # do insertion
     ordered_map = OrderedMap()
     for i in range(len(art_list)):
         ordered_map[art_list[i].keyword] = art_list[i]
 
-    endTimeOrdered = timer()      # end the timer
+    endTimeOrdered = time.time()      # end the timer
     orderedElapsed = endTimeOrdered - startTimeOrdered        # calculate time elapsed
     print("ordered time: ", orderedElapsed)
 
@@ -50,15 +51,15 @@ def create_ordered_map(art_list):
 
 
 def create_unordered_map(art_list):
-    startTimeUnordered = timer()
+    startTimeUnordered = time.time()
 
     # do insertion
     unorderedMap = unordered_map()
     for i in range(len(art_list)):
         unorderedMap[art_list[i].keyword] = art_list[i]
 
-    endTimeUnordered = timer()
-    unorderedElapsed = endTimeUnordered - startTimeUnordered
+    endTimeUnordered = time.time()
+    unorderedElapsed = endTimeUnordered - startTimeUnordered  # Delta t
     print("unordered time: ", unorderedElapsed)
     return (unorderedMap, unorderedElapsed)
 
