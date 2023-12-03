@@ -49,14 +49,38 @@ app.layout = html.Div([
 
 
 def update_graph(start_year, end_year, _keyword):
+
     titleString = _keyword + " Usage Between " + str(start_year) + " and " + str(end_year)
-    df = pd.read_csv("formatted_nyt_data.csv")
+
+    first_line = pd.read_csv("formatted_nyt_data.csv", nrows=1, header=None)
+
+    elapsed_times = first_line.values.flatten()
+
+    subtitle = "Unordered Map Runtime: {} vs Ordered Map Runtime: {}".format(elapsed_times[0], elapsed_times[1])
+
+    df = pd.read_csv("formatted_nyt_data.csv", skiprows=1)
 
     # scanning csv
     filtered_df = df[(df['Year'] >= start_year) & (df['Year'] <= end_year)]
 
     fig = px.scatter(filtered_df, x="Year", y="Usage", trendline_color_override="blue", title=titleString)
     fig.add_trace(px.line(filtered_df, x="Year", y="Usage").data[0])
+
+
+    # subtitle
+    fig.update_layout(
+        annotations=[
+            dict(
+                xref="paper",
+                yref="paper",
+                x=0.5,
+                y=1.15,
+                text=subtitle,
+                showarrow=False,
+                font=dict(size=12)
+            )
+        ]
+    )
 
     return fig
 
@@ -77,7 +101,9 @@ def handleSubmit(submit_val_clicks, start_year, end_year, keyword):
             return no_update
         else:   # if all is good
             if (len(nyt_unordered_map[keyword]) > 0):       # if the keyword exists
+                print("building")
                 getArticlesFromMapsAndInsertToCSV(keyword, start_year, end_year, nyt_unordered_map, nyt_ordered_map)
+                print("done")
                 return update_graph(start_year, end_year, keyword)       # update graph
             else:       # if it is length 0, the keyword doesn't exist
                 return no_update
@@ -122,5 +148,3 @@ if __name__ == "__main__":
     nyt_ordered_map = create_ordered_map(articles_list)
     nyt_unordered_map = create_unordered_map(articles_list)
     app.run(debug=True)
-
-

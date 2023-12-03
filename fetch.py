@@ -1,6 +1,6 @@
 import requests
 import csv
-import time
+from timeit import default_timer as timer
 from ordered_map import OrderedMap
 from unordered_map import unordered_map
 
@@ -93,16 +93,18 @@ def getArticlesFromAPI(array, startYear, endYear):     # never used again since 
 
 def getArticlesFromMapsAndInsertToCSV(keyword, startYear, endYear, unorderedMap, orderedMap):
     # we need to track time so the following is time for unordered map
-    startTimeUnordered = time.time()
+    startTimeUnordered = timer()
     garbage = unorderedMap[keyword]       # get the data (should take a bit), but don't store it because we don't need two
-    endTimeUnordered = time.time()
+    endTimeUnordered = timer()
     UnorderedElapsed = endTimeUnordered - startTimeUnordered
+    print(UnorderedElapsed)
 
     # we need to track time so the following is time for ordered map
-    startTimeOrdered = time.time()
+    startTimeOrdered = timer()
     dataList = orderedMap[keyword]  # get the data (should take a bit)
-    endTimeOrdered = time.time()
+    endTimeOrdered = timer()
     OrderedElapsed = endTimeOrdered - startTimeOrdered
+    print(OrderedElapsed)
 
     usageMap = {}                               # map to hold key of year and value of usages in that year
 
@@ -121,8 +123,12 @@ def getArticlesFromMapsAndInsertToCSV(keyword, startYear, endYear, unorderedMap,
     # now let's write to the CSV
     filePath = 'formatted_nyt_data.csv'
     formatColumns = ["Year", "Usage"]
+    formatedRunTimes = [round(UnorderedElapsed, 11), round(OrderedElapsed, 11)]
 
     with open(filePath, 'w', newline='') as file:
         writer = csv.writer(file)
+        writer.writerow(formatedRunTimes)
         writer.writerow(formatColumns)
         writer.writerows(formattedList)
+
+    return []
