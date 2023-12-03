@@ -196,5 +196,3 @@ if __name__ == "__main__":
 
     # now run the app
     app.run(debug=True)
-
-
