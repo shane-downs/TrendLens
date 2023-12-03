@@ -42,11 +42,11 @@ class HashTable:        # hash table where each index is a list. Each list holds
             quadIndex = (i ** 2) % self.tableSize       # this increases our index quadratically -> (0, 1, 4, 9, 16...)
             currIndex = (hashIndex + quadIndex) % self.tableSize        # the current index for our article to be inserted into
             # since each spot in the table represents a different keyword we need to check if inserting this creates conflict
-            if (len(self.table[currIndex]) == 0):        # if this sub-list is empty, there won't be conflict
+            if (not self.table[currIndex]):        # if this sub-list is empty, there won't be conflict
                 self.table[currIndex].append(article)        # so just add it to the list at that spot
                 break           # and break out of the for loop because there is no need to do quadratic probing
             else:       # otherwise there is something here, so lets check if it has the same keyword as our article
-                if ((len(self.table[currIndex]) > 0) and (self.table[currIndex][0].keyword == article.keyword)):  # if the sub-list isn't empty and has the same keyword
+                if ((self.table[currIndex]) and (self.table[currIndex][0].keyword == article.keyword)):  # if the sub-list isn't empty and has the same keyword
                     self.table[currIndex].append(article)          # add this article to the sub-list
                     break       # and then break out of the for loop
                 else:    # if there was something there that was a conflict, in which case we continue with quadratic probing
@@ -56,11 +56,10 @@ class HashTable:        # hash table where each index is a list. Each list holds
         self.numItems += 1      # increment the number of total articles
         if ((self.numItems / self.tableSize) >= self.LOAD_FACTOR):   # if  we are at/over load factor, we need to resize and rehash all sub-lists
             self.tableSize *= 2     # double the size of our table
-            newTable = []       # new table which will replace the current table
-            for i in range(self.tableSize):     # add a sub-list for every possible spot in the table
-                newTable.append([])
+            newTable = [[] for _ in range(self.tableSize)]
+
             for i in range(int(self.tableSize / 2) - 1):     # for every sub-list in original table...
-                if (len(self.table[i]) > 0):        # if the sub-list isn't empty we need to rehash it
+                if (self.table[i]):        # if the sub-list isn't empty we need to rehash it
                     # get the hashIndex for the first item in the list (the index will be the same for any item in the list)
                     newHashIndex = self.Hash(self.table[i][0])
                     # we might have to quadratic probing to insert, so prepare for that again
@@ -68,12 +67,11 @@ class HashTable:        # hash table where each index is a list. Each list holds
                         quadIndex = (k ** 2) % self.tableSize  # this increases our index quadratically -> (0, 1, 4, 9, 16...)
                         currIndex = (newHashIndex + quadIndex) % self.tableSize     # current index in our new table to look at
                         # since each spot in the table represents a different keyword we need to check if the spot is taken by another keyword
-                        if (len(newTable[currIndex]) == 0):  # if it is empty, there won't be conflict
+                        if (not newTable[currIndex]):  # if it is empty, there won't be conflict
                             newTable[currIndex] = self.table[i]  # so put the whole OG sub-list in that spot
                             break  # and break out of the for loop to move on to the next sub-list in the OG table
                         else:  # otherwise there is something here, since we are adding the whole list it must be a diff keyword
                             continue        # so continue to next quadratic probing iteration
-
             # now that we are done going through the table and rehashing all of our items, update self.table
             self.table = newTable
 

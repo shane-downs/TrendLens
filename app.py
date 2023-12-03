@@ -74,15 +74,22 @@ app.layout = html.Div([
 
 
 def update_graph(start_year, end_year, _keyword):
+    # the title of the graph (not the entire website)
     titleString = "\'" + _keyword + "\'" + " Usage Between " + str(start_year) + " and " + str(end_year)
+    # read the first line from the csv (which has the time taken to retrieve data for both the maps)
     first_line = pd.read_csv("formatted_nyt_data.csv", nrows=1, header=None)
+
+    # gets retrieval time from file and adds it to time taken to insert for the result "total runtime"
     elapsed_times = first_line.values.flatten()
-    subtitle = "Unordered Map Runtime: {} vs Ordered Map Runtime: {}".format(elapsed_times[0], elapsed_times[1])
+    subtitle = "Total Unordered Map Runtime: {} vs Total Ordered Map Runtime: {}".format(
+        (elapsed_times[0] + unorderedRuntime), (elapsed_times[1] + orderedRuntime))
+
     df = pd.read_csv("formatted_nyt_data.csv", skiprows=1)
     # scanning csv
     filtered_df = df[(df['Year'] >= start_year) & (df['Year'] <= end_year)]
     fig = px.scatter(filtered_df, x="Year", y="Usage", trendline_color_override="blue", title=titleString)
     fig.add_trace(px.line(filtered_df, x="Year", y="Usage").data[0])
+
     # subtitle
     fig.update_layout(
         annotations=[
@@ -116,6 +123,7 @@ def handleSubmit(submit_val_clicks, start_year, end_year, keyword):
             return no_update
         else:   # if all is good
             if (len(nyt_unordered_map[keyword]) > 0):       # if the keyword exists
+                # get the data from the maps and write it to the csv
                 getArticlesFromMapsAndInsertToCSV(keyword, start_year, end_year, nyt_unordered_map, nyt_ordered_map)
                 return update_graph(start_year, end_year, keyword)       # update graph
             else:       # if it is length 0, the keyword doesn't exist
@@ -134,9 +142,10 @@ def handleSubmit(submit_val_clicks, start_year, end_year, keyword):
     ],
     prevent_initial_call=True
 )
-def handleRandomize(randomize_val_clicks, start_year, end_year, keyword):
+def handleRandomize(randomize_val_clicks, start_year, end_year, keyword):       # when randomize button is clicked
     if randomize_val_clicks > 0:
-        randomInput = randomizeInput()
+        randomInput = randomizeInput()          # get a random input
+        # get the information for this input out of the map and put it in the csv, so it can be read my update_graph
         getArticlesFromMapsAndInsertToCSV(randomInput[0], randomInput[1], randomInput[2], nyt_unordered_map, nyt_ordered_map)
         return update_graph(randomInput[1], randomInput[2], randomInput[0])  # update graph
     else:
@@ -170,9 +179,22 @@ def randomizeInput():
 
 
 if __name__ == "__main__":
+    # articles_list = read_csv_to_list()
+    # nyt_ordered_map = create_ordered_map(articles_list)
+    # nyt_unordered_map = create_unordered_map(articles_list)
+
+    # get articles from csv file
     articles_list = read_csv_to_list()
-    nyt_ordered_map = create_ordered_map(articles_list)
-    nyt_unordered_map = create_unordered_map(articles_list)
+    # get information for ordered map
+    orderedResult = create_ordered_map(articles_list)
+    nyt_ordered_map = orderedResult[0]      # returns a tuple, so item 0 is the map
+    orderedRuntime = orderedResult[1]       # item 1 is the time taken to insert the items
+    # get information for unordered map
+    unorderedResult = create_unordered_map(articles_list)
+    nyt_unordered_map = unorderedResult[0]      # item 0 is the map
+    unorderedRuntime = unorderedResult[1]       # item 1 is the runtime to do all the insertion
+
+    # now run the app
     app.run(debug=True)
 
 
