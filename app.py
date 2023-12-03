@@ -221,4 +221,4 @@ if __name__ == "__main__":
     nyt_unordered_map = create_unordered_map(articles_list)
     # make list of suggestions
     suggestions = create_map_of_keywords()
-    app.run(debug=True)
+    app.run(debug=False)

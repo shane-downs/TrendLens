@@ -4,7 +4,7 @@ import random
 
 class HashTable:        # hash table where each index is a list. Each list holds article of a similar keyword. Quadratic Probing
     def __init__(self):
-        self.LOAD_FACTOR = 0.7       # load factor is 0.6
+        self.LOAD_FACTOR = 0.7       # load factor is 0.7
         self.tableSize = 10         # initiate table size to 10
         self.numItems = 0           # number of items is 0 until we insert something
         self.table = []      # table to hold the actual information
