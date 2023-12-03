@@ -1,0 +1,119 @@
+*{
+    margin: 0;
+    padding: 0;
+    font-family: "Garamond", sans-serif;
+    box-sizing: border-box;
+}
+
+.homepage{
+    width: 100%;
+    height: 100vh;
+    background: #333333;
+    padding-left: 11%;
+    padding-right: 8%;
+    position: relative;
+    overflow: hidden;
+}
+
+.text-box h3{
+    font-family: "Garamond", sans-serif;
+    margin-top: 10px;
+}
+
+.side-nav{
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 40px 0;
+    background: linear-gradient(#808080, #696969, #505050, #808080) 0 40%;
+    background-size: 100% 500%;
+    animation: backcolor 20s linear infinite reverse;
+}
+
+@keyframes backcolor {
+    0%{
+        background-position: 0 0%;
+    }
+    100%{
+        background-position: 0 500%;
+    }
+}
+.side-nav .logo{
+    width: 85px;
+    height: auto;
+}
+
+.side-nav .headshot {
+    width: 50px;
+    height: auto;
+    margin-bottom: 10px;
+}
+
+.text-box {
+    margin-top: 3vh;
+    font-size: 18px;
+    color: #fff;
+    margin-bottom: 2%;
+}
+
+.text-box .h1 {
+    font-weight: 500;
+    font-size: 86px;
+    max-width: 550px;
+    line-height: 95px;
+    margin-top: 10px;
+    margin-bottom: 1px;
+}
+
+.input-field {
+    font-family: Garamond, sans-serif;
+    font-weight: bold;
+    width: 15%;
+    resize: vertical;
+    padding: 15px;
+    border-radius: 15px;
+    border: 0;
+    box-shadow: 4px 4px 10px rgba(0,0,0,0.06);
+    height: 25px;
+    margin: 5px;
+}
+
+.submit-button {
+    font-family: Garamond, sans-serif;
+    font-weight: bold;
+    padding: 12px 24px;
+    background-color: grey;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    margin-left: 15px;
+}
+
+.random-button {
+    font-family: Garamond, sans-serif;
+    font-weight: bold;
+    padding: 12px 24px;
+    background-color: grey;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    margin-left: 7px;
+}
+
+.submit-button:hover,
+.random-button:hover{
+    background-color: grey;
+    transform: scale(1.05);
+}
