@@ -29,11 +29,10 @@ app.layout = html.Div([
                               max=2023),
                     dcc.Input(id='end-year-input', type='number', placeholder='End Year (1853-2023)', min=1853,
                               max=2023),
-                    dcc.Input(id='keyword-input', type='text', placeholder='Enter Keyword', style={'width': '200px'}),
+                    dcc.Input(id='keyword-input', type='text', placeholder='Enter Keyword'),
                     html.Button('Submit', id='submit-val', n_clicks=0),
                     html.Div([
-                        html.Button('Randomize Keyword', id='randomize-keyword', n_clicks=0,
-                                    style={'width': '208px', 'marginLeft': '339px'})
+                        html.Button('Randomize Keyword', id='randomize-val', n_clicks=0)
                     ]),
                     dcc.Graph(id="line-plot"),
                 ]),
@@ -44,7 +43,6 @@ app.layout = html.Div([
                      ])
         ]
     ),
-    # html div for the randomize button below keyword input
 ])
 
 
