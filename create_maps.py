@@ -62,6 +62,20 @@ def create_unordered_map(art_list):
     print("unordered time: ", unorderedElapsed)
     return (unorderedMap, unorderedElapsed)
 
+def create_map_of_keywords():
+    csvfile = open('nyt_data.csv', newline='', encoding='utf-8', errors='replace')
+    c = csv.reader(csvfile)
+    suggestions_set = set()
+    suggestions = []
+    for row in c:
+        word = row[4].split(',')
+        first_word = word[0].strip()
+        suggestions_set.add(first_word)
+
+    for elem in suggestions_set: 
+        suggestions.append(elem)
+    return suggestions
+
 
 if __name__ == "__main__":
     articles_list = read_csv_to_list()

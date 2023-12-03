@@ -1,7 +1,7 @@
 import csv
 import random
 
-from dash import Dash, html, dcc, callback, Output, Input, State, no_update
+from dash import Dash, html, dcc, callback, Output, Input, State, no_update, exceptions
 import pandas as pd
 import plotly.express as px
 import statsmodels.api as sm
@@ -44,7 +44,12 @@ app.layout = html.Div([
                                          className="input-field",
                                          id='keyword-input',
                                          type='text',
-                                         placeholder='Enter Keyword'),
+                                         placeholder='Enter Keyword',
+                                         persistence=False, 
+                                         autoComplete="off", 
+                                         list = 'list-suggested-inputs',
+                                     ),
+                                     html.Datalist(id='list-suggested-inputs', children=[html.Option(value='')]),
 
                                      html.Button(
                                          className="submit-button",
@@ -107,7 +112,22 @@ def update_graph(start_year, end_year, _keyword):
     return fig
 
 
-@app.callback(      # call back for submit button
+@app.callback(      
+    Output('list-suggested-inputs', 'children'),
+    Input('keyword-input', 'value'),
+    # prevent_initial_call=True
+)
+def suggest_keywords(value):
+    if not value or len(value) < 3:
+        return no_update
+    filtered_suggestions = [suggestion for suggestion in suggestions if value.lower() in suggestion.lower()]
+
+    return [html.Option(value=suggestion) for suggestion in filtered_suggestions]
+
+
+
+
+@app.callback(      
     Output("line-plot", "figure", allow_duplicate=True),
     [Input('submit-val', 'n_clicks')],
     [
@@ -117,6 +137,9 @@ def update_graph(start_year, end_year, _keyword):
     ],
     prevent_initial_call=True
 )
+        
+
+
 def handleSubmit(submit_val_clicks, start_year, end_year, keyword):
     if submit_val_clicks > 0:       # if they clicked submit
         if (start_year is None) or (end_year is None) or (start_year > end_year) or (keyword is None):      # if something bad
@@ -133,7 +156,12 @@ def handleSubmit(submit_val_clicks, start_year, end_year, keyword):
 
 
 @app.callback(      # call back for randomize button
-    Output("line-plot", "figure", allow_duplicate=True),
+    [
+        Output("line-plot", "figure", allow_duplicate=True),
+        Output('start-year-input', 'value'),
+        Output('end-year-input', 'value'),
+        Output('keyword-input', 'value')
+    ],
     [Input('randomize-val', 'n_clicks')],
     [
         State('start-year-input', 'value'),
@@ -147,7 +175,7 @@ def handleRandomize(randomize_val_clicks, start_year, end_year, keyword):       
         randomInput = randomizeInput()          # get a random input
         # get the information for this input out of the map and put it in the csv, so it can be read my update_graph
         getArticlesFromMapsAndInsertToCSV(randomInput[0], randomInput[1], randomInput[2], nyt_unordered_map, nyt_ordered_map)
-        return update_graph(randomInput[1], randomInput[2], randomInput[0])  # update graph
+        return update_graph(randomInput[1], randomInput[2], randomInput[0]), "","",""  # update graph
     else:
         return no_update
 
@@ -165,7 +193,7 @@ def randomizeInput():
         else:
             continue
     # get max and min year from data
-    minYr = 2022
+    minYr = 2023
     maxYr = 1862
     for data in subList:
         if (int(data.year) < minYr):       # if current year is less than current minimum year
@@ -185,6 +213,7 @@ if __name__ == "__main__":
 
     # get articles from csv file
     articles_list = read_csv_to_list()
+<<<<<<< Updated upstream
     # get information for ordered map
     orderedResult = create_ordered_map(articles_list)
     nyt_ordered_map = orderedResult[0]      # returns a tuple, so item 0 is the map
@@ -196,3 +225,10 @@ if __name__ == "__main__":
 
     # now run the app
     app.run(debug=True)
+=======
+    nyt_ordered_map = create_ordered_map(articles_list)
+    nyt_unordered_map = create_unordered_map(articles_list)
+    suggestions = create_map_of_keywords()
+    app.run(debug=True)
+    
+>>>>>>> Stashed changes
