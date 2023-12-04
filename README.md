@@ -1,6 +1,6 @@
 # Created by Shane Downs, Wilson Goins, and Leonardo Cobaleda
 
-Welcome to the README for the unordered_map section of the TrendLens project.
+Welcome to the README for the TrendLens project.
 
 The unordered map class needs two other files to work, a class called Article and a class called HashTable that is the backend of the map.
 
@@ -77,6 +77,63 @@ The unordered map class needs two other files to work, a class called Article an
   **Article:**
   This is the Article class of which each article becomes before being inserted into the unordered_map. Each article object has attributes of its title, keyword, 
   year published, and month published.
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+**OrderMap**
+__init__: Initializes an OrderedMap object. It has an O(1) time complexity.
 
-    
+__setitem__: Inserts a keyword and its corresponding articles into the ordered map. This function has an O(log N) time complexity, where N is the number of keywords in the map.
+
+__getitem__: Retrieves the articles associated with a given keyword. This function has an O(log N) time complexity, where N is the number of keywords in the map.
+
+print_map_contents: Prints the contents of the ordered map using a breadth-first search traversal. This function has an O(N) time complexity, where N is the total number of nodes in the underlying Red-Black Tree.
+
+__iter__: Returns an iterator for the ordered map using an inorder traversal of the underlying Red-Black Tree. This function has an O(N) time complexity, where N is the total number of nodes in the underlying Red-Black Tree.
+
+get_item_count: Returns the count of items (keywords) in the ordered map. It has an O(1) time complexity.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+**RedBlackTree**
+__init__: Initializes a Red-Black Tree object. It has an O(1) time complexity.
+
+left_rotate: Performs a left rotation on the Red-Black Tree. This function has an O(1) time complexity.
+
+right_rotate: Performs a right rotation on the Red-Black Tree. This function has an O(1) time complexity.
+
+insert_helper: Helps with the insertion of a new node while maintaining the Red-Black Tree properties. This function has an O(log N) time complexity, where N is the number of nodes in the tree.
+
+insert_node: Inserts a new node into the Red-Black Tree. This function has an O(log N) time complexity, where N is the number of nodes in the tree.
+
+print_bfs: Prints the Red-Black Tree using a breadth-first search traversal. This function has an O(N) time complexity, where N is the total number of nodes in the tree.
+
+search_red_black: Searches for a node with a specific keyword in the Red-Black Tree. This function has an O(log N) time complexity, where N is the number of nodes in the tree.
+
+inorder_traverse: Performs an inorder traversal of the Red-Black Tree. This function has an O(N) time complexity, where N is the total number of nodes in the tree.
+
+delete_node: Deletes a node from the Red-Black Tree. This function has an O(log N) time complexity, where N is the number of nodes in the tree.
+
+delete_helper: Assists in the deletion of a node while maintaining the Red-Black Tree properties. This function has an O(log N) time complexity, where N is the number of nodes in the tree.
+
+swap_nodes: Swaps two nodes in the Red-Black Tree. It has an O(1) time complexity.
+
+fix_rb_delete: Fixes the Red-Black Tree after a deletion to maintain its properties. This function has an O(log N) time complexity, where N is the number of nodes in the tree.xity, where N is the number of keywords in the map.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+**fetch.py:**
+writeArticlesToRawCSV(array): Writes Article objects to a CSV file. The time complexity is O(n), where n is the number of Article objects in the array. This function is a one-time operation to store articles in a CSV format.
+  
+getArticlesFromAPI(array, startYear, endYear): Fetches articles from the New York Times Archive API within a specified year range. The time complexity is O(k * m), where k is the range of years and m is the number of months per year. This function populates an array with Article objects retrieved from the API.
+
+getArticlesFromMapsAndInsertToCSV(keyword, startYear, endYear, unorderedMap, orderedMap): Accesses data from unordered and ordered maps, records usage statistics, and writes results to a new CSV file. The time complexity is O(u + o), where u is the time to access data from the unordered map and o is the time to access data from the ordered map. This function provides insights into keyword usage over a specified time range.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+**create_maps.py:**
+read_csv_to_list(): Reads data from a CSV file and creates a list of Article objects. The time complexity is O(c), where c is the number of rows in the CSV file. This function is part of the initial data loading process.
+  
+create_ordered_map(articles_list): Creates an ordered map from a list of Article objects. The time complexity is O(n), where n is the number of Article objects in the list. This function transforms raw data into an ordered map for efficient keyword-based retrieval.
+  
+create_unordered_map(articles_list): Creates an unordered map from a list of Article objects. The time complexity is O(n), where n is the number of Article objects in the list. Similar to `create_ordered_map`, this function transforms raw data into an unordered map, optimizing for fast access.
+
