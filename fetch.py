@@ -30,65 +30,65 @@ def writeArticlesToRawCSV(array):    # never used again since we only needed to 
             csvwriter.writerow(row)
 
 
-def getArticlesFromAPI(array, startYear, endYear):     # never used again since we only needed to do it once
-    api_key = 'rw3uRjFP0HcePAbOw7629sEzEWSnfZcU'
-
-    # iterating through entire new york times archive api
-    for i in range(startYear, endYear):
-        for j in range(1, 13):
-            year = i
-            month = j
-
-            url = f'https://api.nytimes.com/svc/archive/v1/{year}/{month}.json?api-key={api_key}'
-
-            # API call
-            response = requests.get(url)
-
-            # checking success code
-            if response.status_code == 200:
-                # parsing json file
-                data = response.json()
-
-                # checking for response and docs inside the data
-                if 'response' in data and 'docs' in data['response']:
-
-                    for article_data in data['response']['docs']:
-                        # checking for publish dates aka checking if the month of articles is empty
-                        if 'pub_date' not in article_data:
-                            continue
-
-                        # titles, url, time
-                        title = article_data['headline']['main']
-                        url = article_data['web_url']
-                        # time structure is "year-month-day-hours:minutes:seconds+0000"
-                        # ex: 2019-01-01T05:00:00+0000"
-                        # T is just a string to represent time
-
-                        time = article_data['pub_date']
-                        year_pub = time[0:4]
-                        month_pub = time[6:7]
-
-                        # extracting  keywords
-                        keywords = [article_data.get('keywords', [])[0]['value']] if article_data.get(
-                            'keywords') else []
-                        if not keywords:
-                            continue
-
-                        array.append(Article(title, year_pub, month_pub, url, keywords))
-
-                    # for article_info in array:
-                    #     print("Title:", article_info.title)
-                    #     print("URL:", article_info.url)
-                    #     print("Date Published:", article_info.year, "-", article_info.month)
-                    #     print("Keywords:", ", ".join(article_info.keyword))
-                    #     print("\n" + "=" * 50 + "\n")
-                else:
-                    print("Error: 'response' or 'docs' keys not found in the API response.")
-            else:
-                # Print an error message if the request was not successful
-                print(f"Error: {response.status_code}, {response.text}")
-
-            return array
+# def getArticlesFromAPI(array, startYear, endYear):     # never used again since we only needed to do it once
+#     # api_key use here
+#
+#     # iterating through entire new york times archive api
+#     for i in range(startYear, endYear):
+#         for j in range(1, 13):
+#             year = i
+#             month = j
+#
+#             #url = f'https://api.nytimes.com/svc/archive/v1/{year}/{month}.json?api-key={api_key}'
+#
+#             # API call
+#             response = requests.get(url)
+#
+#             # checking success code
+#             if response.status_code == 200:
+#                 # parsing json file
+#                 data = response.json()
+#
+#                 # checking for response and docs inside the data
+#                 if 'response' in data and 'docs' in data['response']:
+#
+#                     for article_data in data['response']['docs']:
+#                         # checking for publish dates aka checking if the month of articles is empty
+#                         if 'pub_date' not in article_data:
+#                             continue
+#
+#                         # titles, url, time
+#                         title = article_data['headline']['main']
+#                         url = article_data['web_url']
+#                         # time structure is "year-month-day-hours:minutes:seconds+0000"
+#                         # ex: 2019-01-01T05:00:00+0000"
+#                         # T is just a string to represent time
+#
+#                         time = article_data['pub_date']
+#                         year_pub = time[0:4]
+#                         month_pub = time[6:7]
+#
+#                         # extracting  keywords
+#                         keywords = [article_data.get('keywords', [])[0]['value']] if article_data.get(
+#                             'keywords') else []
+#                         if not keywords:
+#                             continue
+#
+#                         array.append(Article(title, year_pub, month_pub, url, keywords))
+#
+#                     # for article_info in array:
+#                     #     print("Title:", article_info.title)
+#                     #     print("URL:", article_info.url)
+#                     #     print("Date Published:", article_info.year, "-", article_info.month)
+#                     #     print("Keywords:", ", ".join(article_info.keyword))
+#                     #     print("\n" + "=" * 50 + "\n")
+#                 else:
+#                     print("Error: 'response' or 'docs' keys not found in the API response.")
+#             else:
+#                 # Print an error message if the request was not successful
+#                 print(f"Error: {response.status_code}, {response.text}")
+#
+#             return array
 
 
 def getArticlesFromMapsAndInsertToCSV(keyword, startYear, endYear, unorderedMap, orderedMap):
