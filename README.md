@@ -26,7 +26,7 @@ The keyword input field also contains an autofill dropdown to aid in the keyword
 ### How We Built It:
 
 The TrendLens web-app was created using the dash framework and plotly library for embedding a graph in the website.
-We used HTML and CSS for the frontend and Python and the New York Times Developer API for the backend. Our class, Data
+We used HTML and CSS for the frontend and Python and the New York Times Developer API for the backend (frontend materials can be located in `assets` directory). Our class, Data
 Structures and Algorithms (COP3530), required us to use two comparable data structures created from scratch and analyze
 their operations' performance with a large data set. Our data set contains metrics from over 900,000 articles from the
 New York Times Archive API. In the beginning of the project, we fetched all published articles spanning the period of 1853 to 2023 and wrote
