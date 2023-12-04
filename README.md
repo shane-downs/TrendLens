@@ -1,6 +1,81 @@
-# Created by Shane Downs, Wilson Goins, and Leonardo Cobaleda
+# **TrendLens**: COP3530 Group 29 Final Project Submission
+_Created by Shane Downs, Wilson Goins, and Leonardo Cobaleda_
 
-Welcome to the README for the TrendLens project.
+## Project Description:
+
+### Inspiration:
+
+As avid followers of news and current events, the team brainstormed ideas on how we can enagage more with the news media.
+We wanted a way to visualize trending topics in the news over time. This not only helps keep the news media accountable
+by tracking public opinion agendas, but it also is an entertaining way to see how your interests have been represented in
+the media over time. By creating TrendLens, we have given ourselves and others a tool to directly interact with the news they consume.
+
+### What it Does:
+
+TrendLens is a data analysis web-app that allows users to enter a year range (start year - end year) and a "keyword" to see the frequency of this keyword appearing 
+in New York Times articles. A keyword is what the New York Times deems to be the focal point or main category the article fits in to. 
+For example, an article about the 2016 NBA Finals may have the primary keyword being "NBA", "Stephen Curry", or "LeBron James".
+The user's input will then be processed into a line graph with the x-axis being the year range and y-axis being the amount of articles
+that keyword is associated with. Users can also click the "Generate Random Input" button generate a line graph for a random year range and keyword.
+The graph's UI features many tools like zooming, lasso-select, and interactive components to enhance the user's experience.
+The keyword input field also contains an autofill dropdown to aid in the keyword selection process.
+
+### How We Built It:
+
+The TrendLens web-app was created using the dash framework and plotly library for embedding a graph in the website.
+We used HTML and CSS for the frontend and Python and the New York Times Developer API for the backend. Our class, Data
+Structures and Algorithms (COP3530), required us to use two comparable data structures created from scratch and analyze
+their operations' performance with a large data set. Our data set contains metrics from over 900,000 articles from the
+New York Times Archive API. In the beginning of the project, we fetched all published articles spanning the period of 1853 to 2023 and wrote
+their data points to a csv files titled `nyt_data.csv`. In our backend processes, we read data from that csv file for use in the graph front end.
+A future improvement to TrendLens that the group hopes to achieve is to implement a database and Amazon AWS EC2 instance that runs the
+backend processes constantly so the website will always have the newest articles and keywords available to plot. For now, TrendLens
+provides a comprehensive graphical analysis of over 100,000 keywords spanning the period 1853 to December 2023. The ordered-map
+we used is backed by a red-black tree and the unordered map is backed by a hash map data structure with a custom hashing algorithm.
+
+### Challenges We Ran Into:
+
+We struggled with finding a way to constantly fetch data from the New York Times API whenever the user inputs the year range
+and keyword. The NYT API also has a request limit that inhibited our ability to implement this feature. We decided that
+writing data to a csv and referencing that data throughout the web-app's runtime was the best approach given the circumstances.
+
+
+### Accomplishments:
+
+We are proud to have used the New York Times' open source developer API to generate a massive data set for use in this project.
+Our class's final project description only required us to use >100,000 data points and we far exceeded this expectation by using
+900,000. We also are proud to have been able to utilize the dash library to effectively display data to the user in
+a way that is highly customizable and offers many tools to improve their experience. Lastly, navigating the logic of the backend
+red-black tree and hash map data structures was difficult but rewarding to implement in Python as opposed to C++.
+
+### What's Next for TrendLens?
+
+We hope to implement constant data fetching from the NYT Archive API. This would require a backend database so we hope to implement
+that functionality later on. Additionally, we hope to add more features to side-bar of the website.
+
+
+
+## SETUP:
+* Clone the repository
+* Setup a Python virtual environment or use local interpreter.
+* Pip install dependencies listed below
+* Run app.py and click on local host link in output terminal
+
+## Dependencies (Pip Install)
+* _dash_
+* _pandas_
+* _csv_
+* _plotly.express_
+* _statsmodels.api_
+* Optional: _requests_
+
+### App.py is driver file, create_maps.py contains most backend processes including the reading and writing of NYT article data from nyt_data.csv and insertion to map data structures
+
+
+## Link to Video Demo:
+# TODO: ADD YT LINK!
+
+# Description of Backend Processes
 
 The unordered map class needs two other files to work, a class called Article and a class called HashTable that is the backend of the map.
 
