@@ -1,6 +1,9 @@
 # **TrendLens**: COP3530 Group 29 Final Project Submission
 _Created by Shane Downs, Wilson Goins, and Leonardo Cobaleda_
 
+## Link to Video Demo:
+https://youtu.be/-Cwc7H2krQw
+
 ## Project Description:
 
 ### Inspiration:
@@ -71,9 +74,6 @@ that functionality later on. Additionally, we hope to add more features to side-
 
 ### App.py is driver file, create_maps.py contains most backend processes including the reading and writing of NYT article data from nyt_data.csv and insertion to map data structures
 
-
-## Link to Video Demo:
-https://youtu.be/-Cwc7H2krQw
 
 # Description of Backend Processes
 
