@@ -1,8 +1,13 @@
 # **TrendLens**: COP3530 Group 29 Final Project Submission
 _Created by Shane Downs, Wilson Goins, and Leonardo Cobaleda_
 
-## Link to Video Demo:
+
+## YT Link to Shane's Demo
+https://youtu.be/E4zfqU2GZuA
+
+## Link to Wilson & Leonardo's Video Demo:
 https://youtu.be/-Cwc7H2krQw
+
 
 ## Project Description:
 
