@@ -2,6 +2,12 @@
 _Created by Shane Downs, Wilson Goins, and Leonardo Cobaleda_
 
 
+
+![trendlens](https://github.com/shane-downs/TrendLens/assets/115857643/85182db3-1fe9-4ab2-9324-8595f918c4f0)
+
+
+
+
 ## YT Link to Shane's Demo
 https://youtu.be/E4zfqU2GZuA
 
